@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ZooCorp.BusinessLogic.Foods;
 
 namespace ZooCorp.BusinessLogic.Animals.Birds
 {
@@ -10,13 +11,18 @@ namespace ZooCorp.BusinessLogic.Animals.Birds
     {
         public override int RequiredSpaceSfFt { get; } = 10;
        
-        public override string[] FavoriteFood { get; } = new[] { "fish",  "shellfish" };
+        public override string[] FavoriteFood { get; } = new[] { "Meat" };
 
-        public override List<string> FrendlyWith { get; } = new List<string>() { typeof(Penguin).ToString() };
+        public override List<string> FrendlyWith { get; } = new List<string>() { "Penguin" };
+
+        public Penguin(int id, List<int> feedSchedule = null) {
+            ID = id;
+            FeedSchedule = feedSchedule ?? new List<int>();
+        }
 
         public override bool IsFriendlyWith(Animal animal)
         {
-            return FrendlyWith.Contains(animal.GetType().ToString());
+            return FrendlyWith.Contains(animal.GetType().Name);
         }
     }
 }

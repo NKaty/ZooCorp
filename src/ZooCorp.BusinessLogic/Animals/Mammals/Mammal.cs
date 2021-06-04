@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace ZooCorp.BusinessLogic.Animals.Mammals
 {
-    public abstract class Mammal : Animal
-    {
-    }
+    public abstract class Mammal : Animal { }
+
 }

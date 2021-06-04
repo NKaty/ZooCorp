@@ -8,6 +8,9 @@ using ZooCorp.BusinessLogic.Animals;
 using ZooCorp.BusinessLogic.Animals.Birds;
 using ZooCorp.BusinessLogic.Animals.Mammals;
 using ZooCorp.BusinessLogic.Animals.Reptiles;
+using ZooCorp.BusinessLogic.Foods;
+using ZooCorp.BusinessLogic.Employees;
+using ZooCorp.BusinessLogic.Exceptions;
 
 namespace ZooCorp.Tests.Animals.Birds
 {
@@ -16,55 +19,77 @@ namespace ZooCorp.Tests.Animals.Birds
         [Fact]
         public void ShouldBeAbleToCreateParrot()
         {
-            Parrot parrot = new Parrot();
+            Parrot parrot = new Parrot(1, new List<int>() { 5, 10 });
+            Assert.Equal(1, parrot.ID);
+            Assert.Equal(5, parrot.FeedSchedule[0]);
         }
 
         [Fact]
         public void ShouldRequireSpace5()
         {
-            Parrot parrot = new Parrot();
+            Parrot parrot = new Parrot(1);
             Assert.Equal(5, parrot.RequiredSpaceSfFt);
         }
 
         [Fact]
-        public void ShouldHaveFavoriteFoodAsSeedAndFruit()
+        public void ShouldHaveFavoriteFoodAsVegetable()
         {
-            Parrot parrot = new Parrot();
-            Assert.Equal("seed", parrot.FavoriteFood[0]);
-            Assert.Equal("fruit", parrot.FavoriteFood[1]);
+            Parrot parrot = new Parrot(1);
+            Assert.Equal("Vegetable", parrot.FavoriteFood[0]);
         }
 
         public static IEnumerable<object[]> DataFriendlyWith =>
         new List<object[]>
         {
-           new [] { new Parrot() },
-           new [] { new Bison() },
-           new [] { new Elephant() },
-           new [] { new Turtle() }
+           new [] { new Parrot(2) },
+           new [] { new Bison(2) },
+           new [] { new Elephant(2) },
+           new [] { new Turtle(2) }
         };
 
         [Theory]
         [MemberData(nameof(DataFriendlyWith))]
         public void ShouldBeFriendly(Animal animal)
         {
-            Parrot parrot = new Parrot();
+            Parrot parrot = new Parrot(1);
             Assert.True(parrot.IsFriendlyWith(animal));
         }
 
         public static IEnumerable<object[]> DataNotFriendlyWith =>
         new List<object[]>
         {
-           new [] { new Penguin() },
-           new [] { new Lion() },
-           new [] { new Snake() }
+           new [] { new Penguin(2) },
+           new [] { new Lion(2) },
+           new [] { new Snake(2) }
         };
 
         [Theory]
         [MemberData(nameof(DataNotFriendlyWith))]
         public void ShouldNotBeFriendly(Animal animal)
         {
-            Parrot parrot = new Parrot();
+            Parrot parrot = new Parrot(1);
             Assert.False(parrot.IsFriendlyWith(animal));
+        }
+
+        [Fact]
+        public void ShouldTrackFeeding()
+        {
+            Parrot parrot = new Parrot(1);
+            var zooKeeper = new ZooKeeper("Bob", "Smith");
+            parrot.Feed(new Vegetable(), zooKeeper);
+
+            Assert.Single(parrot.FeedTimes);
+            Assert.Equal(zooKeeper, parrot.FeedTimes[0].FeedByZooKeeper);
+        }
+
+        [Fact]
+        public void ShouldThrowExceptionIfFoodIsNotFavorite()
+        {
+            Parrot parrot = new Parrot(1);
+            var zooKeeper = new ZooKeeper("Bob", "Smith");
+            
+
+            Assert.Throws<NotFavoriteFoodException>(() => parrot.Feed(new Meat(), zooKeeper));
         }
     }
 }

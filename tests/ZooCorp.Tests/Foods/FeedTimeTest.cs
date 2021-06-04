@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using ZooCorp.BusinessLogic.Foods;
+using ZooCorp.BusinessLogic.Employees;
 
 namespace ZooCorp.Tests.Foods
 {
@@ -13,7 +14,12 @@ namespace ZooCorp.Tests.Foods
         [Fact]
         public void ShouldBeAbleToCreateFeedTime()
         {
-            FeedTime feedTime = new FeedTime();
+            var dateTime = new DateTime();
+            var zooKeeper = new ZooKeeper("Bob", "Smith");
+            FeedTime feedTime = new FeedTime(dateTime, zooKeeper);
+
+            Assert.Equal(dateTime, feedTime.FeedAnimalTime);
+            Assert.Equal(zooKeeper, feedTime.FeedByZooKeeper);
         }
     }
 }

@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using ZooCorp.BusinessLogic.Foods;
 using ZooCorp.BusinessLogic.Medicines;
-
-
+using ZooCorp.BusinessLogic.Exceptions;
+using ZooCorp.BusinessLogic.Employees;
 
 namespace ZooCorp.BusinessLogic.Animals
 {
@@ -22,9 +22,11 @@ namespace ZooCorp.BusinessLogic.Animals
 
         public abstract List<string> FrendlyWith { get; }
 
-        public List<FeedTime> FeedTimes { get; }
+        public List<FeedTime> FeedTimes { get; } = new List<FeedTime>();
 
-        public List<int> FeedSchedule { get; }
+        public List<int> FeedSchedule { get; set; }
+
+        public string neededMedicine { get; set; } = null;
 
         public bool IsSick()
         {
@@ -33,9 +35,15 @@ namespace ZooCorp.BusinessLogic.Animals
 
         public abstract bool IsFriendlyWith(Animal animal);
 
-        public void Feed(Food food)
+        public void Feed(Food food, ZooKeeper zooKeeper)
         {
-
+            if (FavoriteFood.Contains(food.GetType().Name))
+            {
+                FeedTimes.Add(new FeedTime(new DateTime(), zooKeeper));
+            } else
+            {
+                throw new NotFavoriteFoodException("The animal does not eat this type of food.");
+            }
         }
 
         public void AddFeedSchedule(List<int> hours)
@@ -43,14 +51,23 @@ namespace ZooCorp.BusinessLogic.Animals
             FeedSchedule.AddRange(hours);
         }
 
-        public void MarkSick()
+        public void MarkSick(Medicine medicine = null)
         {
             _isSick = true;
+            neededMedicine = medicine?.GetType().Name;
         }
 
-        public void Heal(Medicine medicine)
+        public void Heal(Medicine medicine = null)
         {
-            _isSick = false;
+            if (neededMedicine == medicine?.GetType().Name)
+            {
+                neededMedicine = null;
+                _isSick = false;
+            } else
+            {
+                throw new NotNeededMedicineException("The animal does need another type of medicine.");
+            }
+            
         }
     }
 }

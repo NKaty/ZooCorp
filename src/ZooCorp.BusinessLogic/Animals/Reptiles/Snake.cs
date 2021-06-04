@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ZooCorp.BusinessLogic.Animals.Mammals;
 using ZooCorp.BusinessLogic.Animals.Birds;
+using ZooCorp.BusinessLogic.Foods;
 
 namespace ZooCorp.BusinessLogic.Animals.Reptiles
 {
@@ -12,13 +13,18 @@ namespace ZooCorp.BusinessLogic.Animals.Reptiles
     {
         public override int RequiredSpaceSfFt { get; } = 2;
 
-        public override string[] FavoriteFood { get; } = new[] { "mouse", "insect" };
+        public override string[] FavoriteFood { get; } = new[] { "Meat" };
 
-        public override List<string> FrendlyWith { get; } = new List<string>() { typeof(Snake).ToString() };
+        public override List<string> FrendlyWith { get; } = new List<string>() { "Snake" };
+
+        public Snake(int id, List<int> feedSchedule = null) {
+            ID = id;
+            FeedSchedule = feedSchedule ?? new List<int>();
+        }
 
         public override bool IsFriendlyWith(Animal animal)
         {
-            return FrendlyWith.Contains(animal.GetType().ToString());
+            return FrendlyWith.Contains(animal.GetType().Name);
         }
     }
 }
