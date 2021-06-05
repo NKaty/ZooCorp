@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace ZooCorp.BusinessLogic.Exceptions
 {
-    public class NotFavoriteFoodException : Exception
+    public class NoAvailableSpaceException : Exception
     {
-        public NotFavoriteFoodException(string message) : base(message) { }
+        public NoAvailableSpaceException(string message) : base(message) { }
     }
 }

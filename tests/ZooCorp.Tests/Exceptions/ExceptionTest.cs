@@ -23,5 +23,19 @@ namespace ZooCorp.Tests.Exceptions
             NotNeededMedicineException exception = new NotNeededMedicineException("Message");
             Assert.Equal("Message", exception.Message);
         }
+
+        [Fact]
+        public void ShouldBeAbleToCreateNoAvailableSpaceException()
+        {
+            NoAvailableSpaceException exception = new NoAvailableSpaceException("Message");
+            Assert.Equal("Message", exception.Message);
+        }
+
+        [Fact]
+        public void ShouldBeAbleToCreateNotFriendlyAnimalException()
+        {
+            NotFriendlyAnimalException exception = new NotFriendlyAnimalException("Message");
+            Assert.Equal("Message", exception.Message);
+        }
     }
 }

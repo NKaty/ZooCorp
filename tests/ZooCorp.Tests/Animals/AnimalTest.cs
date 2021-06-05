@@ -7,7 +7,6 @@ using Xunit;
 using Moq;
 using ZooCorp.BusinessLogic.Animals;
 using ZooCorp.BusinessLogic.Medicines;
-using ZooCorp.BusinessLogic.Foods;
 using ZooCorp.BusinessLogic.Exceptions;
 
 namespace ZooCorp.Tests.Animals
