@@ -28,7 +28,7 @@ namespace ZooCorp.BusinessLogic
 
         public void AddAnimals(Animal animal)
         {
-            if (!IsAvailableSpace(animal.RequiredSpaceSfFt))
+            if (!IsAvailableSpace(animal))
             {
                 throw new NoAvailableSpaceException($"The enclosure { Name } doesn't have available space.");
             }
@@ -41,7 +41,7 @@ namespace ZooCorp.BusinessLogic
             Animals.Add(animal);
         }
 
-        private bool IsAvailableSpace(int requiredSpace)
+        public bool IsAvailableSpace(Animal newAnimal)
         {
             int availableSpace = SqureFeet;
 
@@ -50,10 +50,10 @@ namespace ZooCorp.BusinessLogic
                 availableSpace -= animal.RequiredSpaceSfFt;
             }
 
-            return requiredSpace <= availableSpace;
+            return newAnimal.RequiredSpaceSfFt <= availableSpace;
         }
 
-        private bool IsAnimalFriendly(Animal newAnimal)
+        public bool IsAnimalFriendly(Animal newAnimal)
         {
             foreach (var animal in Animals)
             {

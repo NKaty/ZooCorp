@@ -37,5 +37,33 @@ namespace ZooCorp.Tests.Exceptions
             NotFriendlyAnimalException exception = new NotFriendlyAnimalException("Message");
             Assert.Equal("Message", exception.Message);
         }
+
+        [Fact]
+        public void ShouldBeAbleToCreateUnknownAnimalException()
+        {
+            UnknownAnimalException exception = new UnknownAnimalException("Message");
+            Assert.Equal("Message", exception.Message);
+        }
+
+        [Fact]
+        public void ShouldBeAbleToCreateNoAvailableEnclosureException()
+        {
+            NoAvailableEnclosureException exception = new NoAvailableEnclosureException("Message");
+            Assert.Equal("Message", exception.Message);
+        }
+
+        [Fact]
+        public void ShouldBeAbleToCreateUnknownEmployeeException()
+        {
+            UnknownEmployeeException exception = new UnknownEmployeeException("Message");
+            Assert.Equal("Message", exception.Message);
+        }
+
+        [Fact]
+        public void ShouldBeAbleToCreateNoNeededExperienceException()
+        {
+            NoNeededExperienceException exception = new NoNeededExperienceException("Message");
+            Assert.Equal("Message", exception.Message);
+        }
     }
 }
