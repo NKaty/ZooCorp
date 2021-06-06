@@ -109,6 +109,37 @@ namespace ZooCorp.Tests
             Assert.NotEqual(enclosure.Animals[1].ID, enclosure.Animals[2].ID);
         }
 
+        public static IEnumerable<object[]> DataEmployeeToCreateEmployee =>
+        new List<object[]>
+        {
+            new object [] { "Veterinarian", "Bob", "Smith", new List<string>() { "Elephant", "Parrot", "Lion" } },
+            new object [] { "ZooKeeper", "Bob", "Smith", new List<string>() { "Elephant", "Parrot", "Lion" } }
+        };
+
+        [Theory]
+        [MemberData(nameof(DataEmployeeToCreateEmployee))]
+        public void ShouldCreateAndHireExperiencedEmployee(string type, string firstName, string lastName, List<string> animals)
+        {
+            Zoo zoo = new Zoo("London");
+            zoo.AddEnclosure("Enclosure1", 10000);
+            zoo.AddEnclosure("Enclosure2", 10000);
+            zoo.AddAnimals("parrot");
+            zoo.AddAnimals("lion");
+            zoo.AddAnimals("elephant");
+            zoo.CreateEmployee(type, firstName, lastName, animals);
+
+            Assert.Equal("Bob", zoo.Employees[0].FirstName);
+            Assert.Equal("Smith", zoo.Employees[0].LastName);
+        }
+
+        [Fact]
+        public void ShouldThrowUnknownEmployeeException()
+        {
+            Zoo zoo = new Zoo("London");
+
+            Assert.Throws<UnknownEmployeeException>(() => zoo.CreateEmployee("Janitor", "Bob", "Smith"));
+        }
+
         public static IEnumerable<object[]> DataEmployeeToCheckExperience =>
         new List<object[]>
         {

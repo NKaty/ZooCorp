@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ZooCorp.BusinessLogic.Animals.Mammals;
 using ZooCorp.BusinessLogic.Animals.Reptiles;
+using ZooCorp.BusinessLogic.Common;
 using ZooCorp.BusinessLogic.Foods;
 
 namespace ZooCorp.BusinessLogic.Animals.Birds
@@ -22,7 +23,8 @@ namespace ZooCorp.BusinessLogic.Animals.Birds
             "Turtle"
         };
 
-        public Parrot(int id, List<int> feedSchedule = null) {
+        public Parrot(int id, List<int> feedSchedule = null, IConsole console = null) : base(console)
+        {
             ID = id;
             FeedSchedule = feedSchedule ?? new List<int>() { 6, 17 };
         }

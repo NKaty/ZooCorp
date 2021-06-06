@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ZooCorp.BusinessLogic.Animals.Reptiles;
 using ZooCorp.BusinessLogic.Animals.Birds;
 using ZooCorp.BusinessLogic.Foods;
+using ZooCorp.BusinessLogic.Common;
 
 namespace ZooCorp.BusinessLogic.Animals.Mammals
 {
@@ -20,7 +21,8 @@ namespace ZooCorp.BusinessLogic.Animals.Mammals
             "Elephant"
         };
 
-        public Bison(int id, List<int> feedSchedule = null) {
+        public Bison(int id, List<int> feedSchedule = null, IConsole console = null) : base(console)
+        {
             ID = id;
             FeedSchedule = feedSchedule ?? new List<int>() { 15 };
         }

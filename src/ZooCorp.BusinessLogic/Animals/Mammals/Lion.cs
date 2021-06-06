@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ZooCorp.BusinessLogic.Animals.Reptiles;
-using ZooCorp.BusinessLogic.Animals.Birds;
-using ZooCorp.BusinessLogic.Foods;
+using ZooCorp.BusinessLogic.Common;
 
 namespace ZooCorp.BusinessLogic.Animals.Mammals
 {
@@ -17,7 +15,8 @@ namespace ZooCorp.BusinessLogic.Animals.Mammals
 
         public override List<string> FrendlyWith { get; } = new List<string>() { "Lion" };
 
-        public Lion(int id, List<int> feedSchedule = null) {
+        public Lion(int id, List<int> feedSchedule = null, IConsole console = null) : base(console)
+        {
             ID = id;
             FeedSchedule = feedSchedule ?? new List<int>() { 8 };
         }
