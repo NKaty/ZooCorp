@@ -27,7 +27,7 @@ namespace ZooCorp.BusinessLogic.Animals.Reptiles
 
         public Turtle(int id, List<int> feedSchedule = null) {
             ID = id;
-            FeedSchedule = feedSchedule ?? new List<int>();
+            FeedSchedule = feedSchedule ?? new List<int>() { 5, 16};
         }
 
         public override bool IsFriendlyWith(Animal animal)

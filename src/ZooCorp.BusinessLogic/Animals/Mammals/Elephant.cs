@@ -24,7 +24,7 @@ namespace ZooCorp.BusinessLogic.Animals.Mammals
 
         public Elephant(int id, List<int> feedSchedule = null) {
             ID = id;
-            FeedSchedule = feedSchedule ?? new List<int>();
+            FeedSchedule = feedSchedule ?? new List<int>() { 16 };
         }
 
         public override bool IsFriendlyWith(Animal animal)

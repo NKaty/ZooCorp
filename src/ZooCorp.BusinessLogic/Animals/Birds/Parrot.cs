@@ -24,7 +24,7 @@ namespace ZooCorp.BusinessLogic.Animals.Birds
 
         public Parrot(int id, List<int> feedSchedule = null) {
             ID = id;
-            FeedSchedule = feedSchedule ?? new List<int>();
+            FeedSchedule = feedSchedule ?? new List<int>() { 6, 17 };
         }
 
         public override bool IsFriendlyWith(Animal animal)

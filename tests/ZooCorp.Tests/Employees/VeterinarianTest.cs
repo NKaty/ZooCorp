@@ -55,6 +55,14 @@ namespace ZooCorp.Tests.Employees
         }
 
         [Fact]
+        public void ShouldNotHealHealthyAnimal()
+        {
+            Veterinarian veterinarian = new Veterinarian("Bob", "Smith", new List<string>() { "Parrot" });
+            var parrot = new Parrot(1);
+            Assert.False(veterinarian.HealAnimal(parrot));
+        }
+
+        [Fact]
         public void ShouldNotFeedAnimalIfDoesNotHaveAnimalExperience()
         {
             Veterinarian veterinarian = new Veterinarian("Bob", "Smith", new List<string>() { "Parrot" });

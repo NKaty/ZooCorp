@@ -37,7 +37,7 @@ namespace ZooCorp.Tests.Animals
             mock.Object.MarkSick(new Antibiotics());
 
             Assert.True(mock.Object.IsSick());
-            Assert.Equal("Antibiotics", mock.Object.neededMedicine);
+            Assert.Equal("Antibiotics", mock.Object.NeededMedicine);
         }
 
         [Fact]

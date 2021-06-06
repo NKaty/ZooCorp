@@ -38,14 +38,14 @@ namespace ZooCorp.BusinessLogic.Employees
             {
                 return false;
             }
-            //if (!animal.IsSick())
-            //{
-            //    return false;
-            //}
-            Medicine medicine = null;
-            if (animal.neededMedicine != null)
+            if (!animal.IsSick())
             {
-                string medicineClassName = $"ZooCorp.BusinessLogic.Medicines.{animal.neededMedicine}";
+                return false;
+            }
+            Medicine medicine = null;
+            if (animal.NeededMedicine != null)
+            {
+                string medicineClassName = $"ZooCorp.BusinessLogic.Medicines.{animal.NeededMedicine}";
                 Type type = Type.GetType(medicineClassName);
                 medicine = Activator.CreateInstance(type) as Medicine;
             }

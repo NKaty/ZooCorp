@@ -26,7 +26,7 @@ namespace ZooCorp.BusinessLogic.Animals
 
         public List<int> FeedSchedule { get; set; }
 
-        public string neededMedicine { get; set; } = null;
+        public string NeededMedicine { get; set; } = null;
 
         public bool IsSick()
         {
@@ -39,7 +39,7 @@ namespace ZooCorp.BusinessLogic.Animals
         {
             if (FavoriteFood.Contains(food.GetType().Name))
             {
-                FeedTimes.Add(new FeedTime(new DateTime(), zooKeeper));
+                FeedTimes.Add(new FeedTime(DateTime.Now, zooKeeper));
             } else
             {
                 throw new NotFavoriteFoodException("The animal does not eat this type of food.");
@@ -54,14 +54,14 @@ namespace ZooCorp.BusinessLogic.Animals
         public void MarkSick(Medicine medicine = null)
         {
             _isSick = true;
-            neededMedicine = medicine?.GetType().Name;
+            NeededMedicine = medicine?.GetType().Name;
         }
 
         public void Heal(Medicine medicine = null)
         {
-            if (neededMedicine == medicine?.GetType().Name)
+            if (NeededMedicine == medicine?.GetType().Name)
             {
-                neededMedicine = null;
+                NeededMedicine = null;
                 _isSick = false;
             } else
             {

@@ -19,7 +19,7 @@ namespace ZooCorp.BusinessLogic.Animals.Mammals
 
         public Lion(int id, List<int> feedSchedule = null) {
             ID = id;
-            FeedSchedule = feedSchedule ?? new List<int>();
+            FeedSchedule = feedSchedule ?? new List<int>() { 8 };
         }
 
         public override bool IsFriendlyWith(Animal animal)

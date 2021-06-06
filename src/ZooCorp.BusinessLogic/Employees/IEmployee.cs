@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ZooCorp.BusinessLogic.Animals;
 
 namespace ZooCorp.BusinessLogic.Employees
 {
@@ -11,5 +12,7 @@ namespace ZooCorp.BusinessLogic.Employees
         string FirstName { get; }
 
         string LastName { get; }
+
+        bool HasAnimalExperience(Animal animal);
     }
 }

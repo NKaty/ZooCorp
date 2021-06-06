@@ -7,6 +7,7 @@ using Xunit;
 using ZooCorp.BusinessLogic.Exceptions;
 using ZooCorp.BusinessLogic.Employees;
 using ZooCorp.BusinessLogic.Employees.HireValidators;
+using ZooCorp.BusinessLogic.Animals;
 
 namespace ZooCorp.Tests.Employees.HireValidators
 {
@@ -31,6 +32,11 @@ namespace ZooCorp.Tests.Employees.HireValidators
             public string FirstName => throw new NotImplementedException();
 
             public string LastName => throw new NotImplementedException();
+
+            public bool HasAnimalExperience(Animal animal)
+            {
+                throw new NotImplementedException();
+            }
         }
 
         [Fact]
