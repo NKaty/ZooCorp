@@ -166,7 +166,7 @@ namespace ZooCorp.BusinessLogic
         {
             var employees = Employees.Where(e => e.GetType().Name == employeeType);
 
-            var dividedAnimals = employees.Select((e) => (employee: e, animals: new List<Animal>() )).ToList();
+            var dividedAnimals = employees.Select((e) => (employee: e, animals: new List<Animal>())).ToList();
 
             foreach (var enclosure in Enclosures)
             {

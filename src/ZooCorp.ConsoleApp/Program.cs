@@ -42,10 +42,12 @@ namespace ZooCorp.ConsoleApp
             zoo1.CreateEmployee("ZooKeeper", "Bob", "Smith", animals);
             zoo1.CreateEmployee("ZooKeeper", "Tom", "Ford", animals);
             zoo1.CreateEmployee("Veterinarian", "Sam", "Ivanov", animals);
+            zoo1.CreateEmployee("Veterinarian", "Lee", "Roy", animals);
 
             zoo2.CreateEmployee("ZooKeeper", "Anna", "Smith", animals);
             zoo2.CreateEmployee("ZooKeeper", "John", "Star", animals);
             zoo2.CreateEmployee("Veterinarian", "Harry", "James", animals);
+            zoo2.CreateEmployee("Veterinarian", "Jane", "Miller", animals);
 
             zoo1.HealAnimals();
             zoo2.HealAnimals();

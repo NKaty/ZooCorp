@@ -47,6 +47,28 @@ namespace ZooCorp.Tests
             Assert.Equal(animal, enclosure.Animals.Last());
         }
 
+        [Theory]
+        [MemberData(nameof(DataEnclosureForAddAnimal))]
+        public void ShouldReturnTrueIfThereIsAvailableSpace(int space, List<Animal> animals)
+        {
+            var zoo = new Zoo("London");
+            var animal = new Parrot(10);
+            Enclosure enclosure = new Enclosure("Enclosure1", zoo, space, animals);
+
+            Assert.True(enclosure.IsAvailableSpace(animal));
+        }
+
+        [Theory]
+        [MemberData(nameof(DataEnclosureForAddAnimal))]
+        public void ShouldReturnTrueIfAnimalsAreFriendly(int space, List<Animal> animals)
+        {
+            var zoo = new Zoo("London");
+            var animal = new Parrot(10);
+            Enclosure enclosure = new Enclosure("Enclosure1", zoo, space, animals);
+
+            Assert.True(enclosure.IsAnimalFriendly(animal));
+        }
+
         public static IEnumerable<object[]> DataEnclosureForThrowNoAvailableSpaceException =>
         new List<object[]>
         {
@@ -66,6 +88,18 @@ namespace ZooCorp.Tests
             Assert.Throws<NoAvailableSpaceException>(() => enclosure.AddAnimals(animal));
         }
 
+        [Theory]
+        [MemberData(nameof(DataEnclosureForThrowNoAvailableSpaceException))]
+        public void ShouldReturnFalseIfNoAvailableSpace(int space, List<Animal> animals)
+        {
+            var zoo = new Zoo("London");
+            var animal = new Parrot(10);
+            Enclosure enclosure = new Enclosure("Enclosure1", zoo, space, animals);
+
+
+            Assert.False(enclosure.IsAvailableSpace(animal));
+        }
+
         public static IEnumerable<object[]> DataEnclosureForThrowNotFriendlyAnimalException =>
         new List<object[]>
         {
@@ -82,6 +116,17 @@ namespace ZooCorp.Tests
 
 
             Assert.Throws<NotFriendlyAnimalException>(() => enclosure.AddAnimals(animal));
+        }
+
+        [Theory]
+        [MemberData(nameof(DataEnclosureForThrowNotFriendlyAnimalException))]
+        public void ShouldReturnFalseIfAnimalsAreUnfriendly(Animal animal, List<Animal> animals)
+        {
+            var zoo = new Zoo("London");
+            Enclosure enclosure = new Enclosure("Enclosure1", zoo, 5000, animals);
+
+
+            Assert.False(enclosure.IsAnimalFriendly(animal));
         }
     }
 }

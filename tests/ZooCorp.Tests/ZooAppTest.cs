@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using ZooCorp.BusinessLogic;
+using ZooCorp.BusinessLogic.Common;
 
 namespace ZooCorp.Tests
 {
@@ -13,8 +14,10 @@ namespace ZooCorp.Tests
         [Fact]
         public void ShouldBeAbleToCreateZooApp()
         {
-            ZooApp zooApp = new ZooApp();
+            IConsole console = new ZooConsole();
+            ZooApp zooApp = new ZooApp(console);
         }
+
 
         [Fact]
         public void ShouldBeAbleToAddNewZoo()
