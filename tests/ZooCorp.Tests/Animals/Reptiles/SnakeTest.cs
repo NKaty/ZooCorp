@@ -88,8 +88,25 @@ namespace ZooCorp.Tests.Animals.Reptiles
             Snake snake = new Snake(1);
             var zooKeeper = new ZooKeeper("Bob", "Smith");
 
-
             Assert.Throws<NotFavoriteFoodException>(() => snake.Feed(new Grass(), zooKeeper));
+        }
+
+        [Fact]
+        public void ShouldBeHungryUntilAteTwicePerDay()
+        {
+            Snake snake = new Snake(1);
+            Assert.True(snake.IsHungry(DateTime.Now));
+            snake.Feed(new Meat(), new ZooKeeper("Bob", "Smith"));
+            Assert.True(snake.IsHungry(DateTime.Now));
+        }
+
+        [Fact]
+        public void ShouldNotBeHungryAfterAteTwicePerDay()
+        {
+            Snake snake = new Snake(1);
+            snake.Feed(new Meat(), new ZooKeeper("Bob", "Smith"));
+            snake.Feed(new Meat(), new ZooKeeper("Bob", "Smith"));
+            Assert.False(snake.IsHungry(DateTime.Now));
         }
     }
 }

@@ -11,7 +11,7 @@ namespace ZooCorp.BusinessLogic.Employees
 {
     public class ZooKeeper : IEmployee
     {
-        private IConsole _console;
+        private readonly IConsole _console;
 
         public string FirstName { get; private set; }
 

@@ -88,8 +88,25 @@ namespace ZooCorp.Tests.Animals.Mammals
             Bison bison = new Bison(1);
             var zooKeeper = new ZooKeeper("Bob", "Smith");
 
-
             Assert.Throws<NotFavoriteFoodException>(() => bison.Feed(new Meat(), zooKeeper));
+        }
+
+        [Fact]
+        public void ShouldBeHungryUntilAteTwicePerDay()
+        {
+            Bison bison = new Bison(1);
+            Assert.True(bison.IsHungry(DateTime.Now));
+            bison.Feed(new Grass(), new ZooKeeper("Bob", "Smith"));
+            Assert.True(bison.IsHungry(DateTime.Now));
+        }
+
+        [Fact]
+        public void ShouldNotBeHungryAfterAteTwicePerDay()
+        {
+            Bison bison = new Bison(1);
+            bison.Feed(new Grass(), new ZooKeeper("Bob", "Smith"));
+            bison.Feed(new Grass(), new ZooKeeper("Bob", "Smith"));
+            Assert.False(bison.IsHungry(DateTime.Now));
         }
     }
 }

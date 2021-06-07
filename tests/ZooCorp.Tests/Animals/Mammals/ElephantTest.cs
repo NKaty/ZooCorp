@@ -88,8 +88,25 @@ namespace ZooCorp.Tests.Animals.Mammals
             Elephant elephant = new Elephant(1);
             var zooKeeper = new ZooKeeper("Bob", "Smith");
 
-
             Assert.Throws<NotFavoriteFoodException>(() => elephant.Feed(new Meat(), zooKeeper));
+        }
+
+        [Fact]
+        public void ShouldBeHungryUntilAteTwicePerDay()
+        {
+            Elephant elephant = new Elephant(1);
+            Assert.True(elephant.IsHungry(DateTime.Now));
+            elephant.Feed(new Grass(), new ZooKeeper("Bob", "Smith"));
+            Assert.True(elephant.IsHungry(DateTime.Now));
+        }
+
+        [Fact]
+        public void ShouldNotBeHungryAfterAteTwicePerDay()
+        {
+            Elephant elephant = new Elephant(1);
+            elephant.Feed(new Grass(), new ZooKeeper("Bob", "Smith"));
+            elephant.Feed(new Grass(), new ZooKeeper("Bob", "Smith"));
+            Assert.False(elephant.IsHungry(DateTime.Now));
         }
     }
 }

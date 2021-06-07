@@ -88,8 +88,25 @@ namespace ZooCorp.Tests.Animals.Mammals
             Lion lion = new Lion(1);
             var zooKeeper = new ZooKeeper("Bob", "Smith");
 
-
             Assert.Throws<NotFavoriteFoodException>(() => lion.Feed(new Vegetable(), zooKeeper));
+        }
+
+        [Fact]
+        public void ShouldBeHungryUntilAteTwicePerDay()
+        {
+            Lion lion = new Lion(1);
+            Assert.True(lion.IsHungry(DateTime.Now));
+            lion.Feed(new Meat(), new ZooKeeper("Bob", "Smith"));
+            Assert.True(lion.IsHungry(DateTime.Now));
+        }
+
+        [Fact]
+        public void ShouldNotBeHungryAfterAteTwicePerDay()
+        {
+            Lion lion = new Lion(1);
+            lion.Feed(new Meat(), new ZooKeeper("Bob", "Smith"));
+            lion.Feed(new Meat(), new ZooKeeper("Bob", "Smith"));
+            Assert.False(lion.IsHungry(DateTime.Now));
         }
     }
 }

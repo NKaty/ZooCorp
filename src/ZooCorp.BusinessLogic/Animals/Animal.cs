@@ -15,7 +15,7 @@ namespace ZooCorp.BusinessLogic.Animals
     {
         private bool _isSick = false;
 
-        private IConsole _console;
+        private readonly IConsole _console;
 
         public int ID { get; set; }
 
@@ -41,6 +41,18 @@ namespace ZooCorp.BusinessLogic.Animals
         public bool IsSick()
         {
             return _isSick;
+        }
+
+        public bool IsHungry(DateTime dateTime)
+        {
+            var dayBeginning = new DateTime(dateTime.Year, dateTime.Month, dateTime.Day);
+            if (FeedTimes.Count == 0 || FeedTimes.Count == 1)
+            {
+                return true;
+            }
+
+            return !(FeedTimes[FeedTimes.Count - 1].FeedAnimalTime >= dayBeginning &&
+            FeedTimes[FeedTimes.Count - 2].FeedAnimalTime >= dayBeginning);
         }
 
         public abstract bool IsFriendlyWith(Animal animal);

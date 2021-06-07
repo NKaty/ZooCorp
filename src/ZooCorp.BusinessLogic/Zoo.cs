@@ -126,17 +126,7 @@ namespace ZooCorp.BusinessLogic
 
         public void FeedAnimals(DateTime dateTime)
         {
-            var dividedAnimals = DivideAnimalsBetweenEmployees("ZooKeeper", (Animal animal) =>
-            {
-                var dayBeginning = new DateTime(dateTime.Year, dateTime.Month, dateTime.Day);
-                if (animal.FeedTimes.Count == 0 || animal.FeedTimes.Count == 1)
-                {
-                    return true;
-                }
-
-                return !(animal.FeedTimes[animal.FeedTimes.Count - 1].FeedAnimalTime >= dayBeginning &&
-                animal.FeedTimes[animal.FeedTimes.Count - 2].FeedAnimalTime >= dayBeginning);
-            });
+            var dividedAnimals = DivideAnimalsBetweenEmployees("ZooKeeper", (Animal animal) => animal.IsHungry(dateTime));
 
             foreach (var group in dividedAnimals)
             {
@@ -162,17 +152,19 @@ namespace ZooCorp.BusinessLogic
             }
         }
 
-        public List<(IEmployee, List<Animal>)> DivideAnimalsBetweenEmployees(string employeeType, Predicate<Animal> checkCondition)
+        public List<(IEmployee, List<Animal>)> DivideAnimalsBetweenEmployees(string employeeType, Predicate<Animal> checkAnimal)
         {
             var employees = Employees.Where(e => e.GetType().Name == employeeType);
 
             var dividedAnimals = employees.Select((e) => (employee: e, animals: new List<Animal>())).ToList();
 
+            bool noEmployeeWithAnimalExperience = false;
+
             foreach (var enclosure in Enclosures)
             {
                 foreach (var animal in enclosure.Animals)
                 {
-                    if (checkCondition(animal))
+                    if (checkAnimal(animal))
                     {
                         dividedAnimals = dividedAnimals.OrderBy(d => d.animals.Count()).ToList();
                         foreach (var item in dividedAnimals)
@@ -182,6 +174,14 @@ namespace ZooCorp.BusinessLogic
                                 item.animals.Add(animal);
                                 break;
                             }
+                            else
+                            {
+                                noEmployeeWithAnimalExperience = true;
+                            }
+                        }
+                        if (noEmployeeWithAnimalExperience)
+                        {
+                            throw new UnknownAnimalException($"The zoo does not keep this type of animals - {animal.GetType().Name}.");
                         }
                     }
                 }

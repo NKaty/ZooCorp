@@ -18,7 +18,6 @@ namespace ZooCorp.Tests
             ZooApp zooApp = new ZooApp(console);
         }
 
-
         [Fact]
         public void ShouldBeAbleToAddNewZoo()
         {

@@ -87,9 +87,26 @@ namespace ZooCorp.Tests.Animals.Birds
         {
             Parrot parrot = new Parrot(1);
             var zooKeeper = new ZooKeeper("Bob", "Smith");
-            
 
             Assert.Throws<NotFavoriteFoodException>(() => parrot.Feed(new Meat(), zooKeeper));
+        }
+
+        [Fact]
+        public void ShouldBeHungryUntilAteTwicePerDay()
+        {
+            Parrot parrot = new Parrot(1);
+            Assert.True(parrot.IsHungry(DateTime.Now));
+            parrot.Feed(new Vegetable(), new ZooKeeper("Bob", "Smith"));
+            Assert.True(parrot.IsHungry(DateTime.Now));
+        }
+
+        [Fact]
+        public void ShouldNotBeHungryAfterAteTwicePerDay()
+        {
+            Parrot parrot = new Parrot(1);
+            parrot.Feed(new Vegetable(), new ZooKeeper("Bob", "Smith"));
+            parrot.Feed(new Vegetable(), new ZooKeeper("Bob", "Smith"));
+            Assert.False(parrot.IsHungry(DateTime.Now));
         }
     }
 }

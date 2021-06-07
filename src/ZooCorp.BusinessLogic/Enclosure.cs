@@ -11,7 +11,7 @@ namespace ZooCorp.BusinessLogic
 {
     public class Enclosure
     {
-        private IConsole _console;
+        private readonly IConsole _console;
         public string Name { get; private set; }
 
         public List<Animal> Animals { get; private set; }

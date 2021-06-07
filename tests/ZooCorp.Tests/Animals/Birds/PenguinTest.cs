@@ -89,8 +89,25 @@ namespace ZooCorp.Tests.Animals.Birds
             Penguin penguin = new Penguin(1);
             var zooKeeper = new ZooKeeper("Bob", "Smith");
 
-
             Assert.Throws<NotFavoriteFoodException>(() => penguin.Feed(new Grass(), zooKeeper));
+        }
+
+        [Fact]
+        public void ShouldBeHungryUntilAteTwicePerDay()
+        {
+            Penguin penguin = new Penguin(1);
+            Assert.True(penguin.IsHungry(DateTime.Now));
+            penguin.Feed(new Meat(), new ZooKeeper("Bob", "Smith"));
+            Assert.True(penguin.IsHungry(DateTime.Now));
+        }
+
+        [Fact]
+        public void ShouldNotBeHungryAfterAteTwicePerDay()
+        {
+            Penguin penguin = new Penguin(1);
+            penguin.Feed(new Meat(), new ZooKeeper("Bob", "Smith"));
+            penguin.Feed(new Meat(), new ZooKeeper("Bob", "Smith"));
+            Assert.False(penguin.IsHungry(DateTime.Now));
         }
     }
 }

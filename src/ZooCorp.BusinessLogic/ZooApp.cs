@@ -9,7 +9,7 @@ namespace ZooCorp.BusinessLogic
 {
     public class ZooApp
     {
-        private IConsole _console;
+        private readonly IConsole _console;
 
         private List<Zoo> _zoos = new List<Zoo>();
 

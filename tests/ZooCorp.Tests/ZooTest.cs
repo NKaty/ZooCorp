@@ -199,6 +199,45 @@ namespace ZooCorp.Tests
         }
 
         [Fact]
+        public void ShouldThrowUnknownAnimalExceptionIfNoVeterinarianWithSuchAnimalExperience()
+        {
+            Zoo zoo = new Zoo("London");
+            zoo.AddEnclosure("Enclosure1", 10000);
+            zoo.AddEnclosure("Enclosure2", 10000);
+            zoo.AddEnclosure("Enclosure3", 10000);
+            zoo.AddAnimals("lion");
+            zoo.AddAnimals("elephant");
+            zoo.AddAnimals("penguin");
+            var veterinarian1 = new Veterinarian("Bob", "Smith", new List<string>() { "Elephant", "Parrot", "Lion", "Penguin" });
+            var veterinarian2 = new Veterinarian("Tom", "Ford", new List<string>() { "Elephant", "Parrot", "Lion", "Penguin" });
+            zoo.HireEmployee(veterinarian1);
+            zoo.HireEmployee(veterinarian2);
+            zoo.AddAnimals("turtle");
+
+            Assert.Throws<UnknownAnimalException>(() => zoo.DivideAnimalsBetweenEmployees("Veterinarian", animal => true));
+        }
+
+        [Fact]
+        public void ShouldThrowUnknownAnimalExceptionIfNoZooKeeperWithSuchAnimalExperience()
+        {
+            Zoo zoo = new Zoo("London");
+            zoo.AddEnclosure("Enclosure1", 10000);
+            zoo.AddEnclosure("Enclosure2", 10000);
+            zoo.AddEnclosure("Enclosure3", 10000);
+            zoo.AddAnimals("parrot");
+            zoo.AddAnimals("lion");
+            zoo.AddAnimals("elephant");
+            zoo.AddAnimals("penguin");
+            var zooKeeper1 = new ZooKeeper("Bob", "Smith", new List<string>() { "Elephant", "Parrot", "Lion", "Penguin" });
+            var zooKeeper2 = new ZooKeeper("Tom", "Ford", new List<string>() { "Elephant", "Parrot", "Lion", "Penguin" });
+            zoo.HireEmployee(zooKeeper1);
+            zoo.HireEmployee(zooKeeper2);
+            zoo.AddAnimals("turtle");
+
+            Assert.Throws<UnknownAnimalException>(() => zoo.DivideAnimalsBetweenEmployees("ZooKeeper", animal => true));
+        }
+
+        [Fact]
         public void ShouldDivideAnimalsBetweenZooKeepers()
         {
             Zoo zoo = new Zoo("London");

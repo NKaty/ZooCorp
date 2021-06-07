@@ -89,8 +89,25 @@ namespace ZooCorp.Tests.Animals.Reptiles
             Turtle turtle = new Turtle(1);
             var zooKeeper = new ZooKeeper("Bob", "Smith");
 
-
             Assert.Throws<NotFavoriteFoodException>(() => turtle.Feed(new Meat(), zooKeeper));
+        }
+
+        [Fact]
+        public void ShouldBeHungryUntilAteTwicePerDay()
+        {
+            Turtle turtle = new Turtle(1);
+            Assert.True(turtle.IsHungry(DateTime.Now));
+            turtle.Feed(new Vegetable(), new ZooKeeper("Bob", "Smith"));
+            Assert.True(turtle.IsHungry(DateTime.Now));
+        }
+
+        [Fact]
+        public void ShouldNotBeHungryAfterAteTwicePerDay()
+        {
+            Turtle turtle = new Turtle(1);
+            turtle.Feed(new Vegetable(), new ZooKeeper("Bob", "Smith"));
+            turtle.Feed(new Vegetable(), new ZooKeeper("Bob", "Smith"));
+            Assert.False(turtle.IsHungry(DateTime.Now));
         }
     }
 }
