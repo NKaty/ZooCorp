@@ -33,17 +33,17 @@ namespace ZooCorp.BusinessLogic
         {
             if (!IsAvailableSpace(animal))
             {
-                _console?.WriteLine($"The enclosure <<{Name}>> doesn't have available space");
+                _console?.WriteLine($"Enclosure: The enclosure {Name} doesn't have available space");
                 throw new NoAvailableSpaceException($"The enclosure {Name} doesn't have available space.");
             }
 
             if (!IsAnimalFriendly(animal))
             {
-                _console?.WriteLine($"The enclosure <<{Name}>> has unfriendly animals.");
+                _console?.WriteLine($"Enclosure: The enclosure {Name} has unfriendly animals.");
                 throw new NotFriendlyAnimalException($"The enclosure {Name} has unfriendly animals.");
             }
 
-            _console?.WriteLine($"Added {animal.GetType().Name} ID <<{animal.ID}>> in zoo in <<{Name}>>.");
+            _console?.WriteLine($"Enclosure: Added {animal.GetType().Name} ID {animal.ID} in zoo in {Name}.");
             Animals.Add(animal);
         }
 

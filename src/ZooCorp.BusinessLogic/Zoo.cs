@@ -14,7 +14,7 @@ namespace ZooCorp.BusinessLogic
 {
     public class Zoo
     {
-        private static int _idCounter = 0;
+        private int _idCounter = 0;
 
         private readonly IConsole _console;
 
@@ -39,14 +39,14 @@ namespace ZooCorp.BusinessLogic
         {
             Location = location;
             _console = console;
-            _console?.WriteLine($"Created zoo in <<{location}>>.");
+            _console?.WriteLine($"Zoo: Created zoo in {location}.");
         }
 
         public Enclosure AddEnclosure(string name, int squreFeet)
         {
             var enclosure = new Enclosure(name, this, squreFeet, null, _console);
             Enclosures.Add(enclosure);
-            _console?.WriteLine($"Created enclosure <<{name}>> in zoo in <<{Location}>>.");
+            _console?.WriteLine($"Zoo: Created enclosure {name} in zoo in {Location}.");
             return enclosure;
         }
 
@@ -56,7 +56,7 @@ namespace ZooCorp.BusinessLogic
             {
                 if (enclosure.IsAvailableSpace(animal) && enclosure.IsAnimalFriendly(animal))
                 {
-                    _console?.WriteLine($"Found an available enclosure <<{enclosure.Name}>> in zoo in <<{Location}>>.");
+                    _console?.WriteLine($"Zoo: Found an available enclosure {enclosure.Name} in zoo in {Location}.");
                     return enclosure;
                 }
             }
@@ -69,7 +69,7 @@ namespace ZooCorp.BusinessLogic
             var zooAnimalTypes = _animalTypes.Where(type => type.Item2.ToLower() == animalType.ToLower());
             if (zooAnimalTypes.Count() == 0)
             {
-                _console?.WriteLine($"Trying to add unknown type of animal to the zoo in <<{Location}>>.");
+                _console?.WriteLine($"Zoo: Trying to add unknown type of animal to the zoo in {Location}.");
                 throw new UnknownAnimalException($"The zoo does not keep this type of animals - {animalType}.");
             }
 
@@ -80,7 +80,7 @@ namespace ZooCorp.BusinessLogic
 
             var enclosure = FindAvailableEnclosure(animal);
             enclosure.AddAnimals(animal);
-            _console?.WriteLine($"Added {animalType} ID <<{animal.ID}>> to <<{enclosure.Name}>> in zoo in <<{Location}>>.");
+            _console?.WriteLine($"Zoo: Added {animalType} ID {animal.ID} to {enclosure.Name} in zoo in {Location}.");
 
             return animal;
         }
@@ -90,19 +90,19 @@ namespace ZooCorp.BusinessLogic
             if (employeeType == "Veterinarian")
             {
                 HireEmployee(new Veterinarian(firstName, lastName, animalExperiences, _console));
-                _console?.WriteLine($"Created and hired Veterinarian <<{firstName} {lastName}>> in zoo in <<{Location}>>.");
+                _console?.WriteLine($"Zoo: Created Veterinarian {firstName} {lastName} in zoo in {Location}.");
                 return;
             }
 
             if (employeeType == "ZooKeeper")
             {
                 HireEmployee(new ZooKeeper(firstName, lastName, animalExperiences, _console));
-                _console?.WriteLine($"Created and hired ZooKeeper <<{firstName} {lastName}>> in zoo in <<{Location}>>.");
+                _console?.WriteLine($"Zoo: Created ZooKeeper {firstName} {lastName} in zoo in {Location}.");
                 return;
             }
 
-            _console?.WriteLine($"Trying to hire unknown type of employee.");
-            throw new UnknownEmployeeException($"The zoo does not have this type of employee in the zoo in <<{Location}>>.");
+            _console?.WriteLine($"Zoo: Trying to hire unknown type of employee.");
+            throw new UnknownEmployeeException($"The zoo does not have this type of employee in the zoo in {Location}.");
         }
 
         public void HireEmployee(IEmployee employee)
@@ -112,7 +112,7 @@ namespace ZooCorp.BusinessLogic
 
             if (errors.Count() != 0)
             {
-                _console?.WriteLine($"{employee.GetType().Name} <<{employee.FirstName} {employee.LastName}>> does not have needed experience.");
+                _console?.WriteLine($"Zoo: {employee.GetType().Name} {employee.FirstName} {employee.LastName} does not have needed experience.");
                 foreach (var error in errors)
                 {
                     _console?.WriteLine($"{(error as AnimalExperiencesValidationError).Animal}: {(error as AnimalExperiencesValidationError).Message}");
@@ -120,7 +120,7 @@ namespace ZooCorp.BusinessLogic
                 throw new NoNeededExperienceException($"The {employee.GetType().Name} does not have excperience with all the zoo animals");
             }
 
-            _console?.WriteLine($"Hired {employee.GetType().Name} <<{employee.FirstName} {employee.LastName}>> in zoo in <<{Location}>>.");
+            _console?.WriteLine($"Zoo: Hired {employee.GetType().Name} {employee.FirstName} {employee.LastName} in zoo in {Location}.");
             Employees.Add(employee);
         }
 
@@ -143,7 +143,7 @@ namespace ZooCorp.BusinessLogic
                 foreach (var animal in group.Item2)
                 {
                     (group.Item1 as ZooKeeper).FeedAnimal(animal);
-                    _console?.WriteLine($"{animal.GetType().Name} ID <<{animal.ID}>> was fed by <<{group.Item1.FirstName} {group.Item1.FirstName}>> in zoo in <<{Location}>>.");
+                    _console?.WriteLine($"Zoo: {animal.GetType().Name} ID {animal.ID} was fed by {group.Item1.FirstName} {group.Item1.LastName} in zoo in {Location}.");
                 }
             }
         }
@@ -157,7 +157,7 @@ namespace ZooCorp.BusinessLogic
                 foreach (var animal in group.Item2)
                 {
                     (group.Item1 as Veterinarian).HealAnimal(animal);
-                    _console?.WriteLine($"{animal.GetType().Name} ID <<{animal.ID}>> was healed by <<{group.Item1.FirstName} {group.Item1.FirstName}>> in zoo in <<{Location}>>.");
+                    _console?.WriteLine($"Zoo: {animal.GetType().Name} ID {animal.ID} was healed by {group.Item1.FirstName} {group.Item1.LastName} in zoo in {Location}.");
                 }
             }
         }

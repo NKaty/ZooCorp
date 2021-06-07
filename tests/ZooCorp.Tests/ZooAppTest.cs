@@ -29,8 +29,8 @@ namespace ZooCorp.Tests
         public void ShouldBeAbleToCreateAndAddNewZoo()
         {
             ZooApp zooApp = new ZooApp();
-            zooApp.CreateZoo("London");
-            Assert.Equal("London", zooApp.GetZoos()[0].Location);
+            var zoo = zooApp.CreateZoo("London");
+            Assert.Equal("London", zoo.Location);
         }
     }
 }

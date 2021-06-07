@@ -50,17 +50,17 @@ namespace ZooCorp.BusinessLogic.Animals
             if (FavoriteFood.Contains(food.GetType().Name))
             {
                 FeedTimes.Add(new FeedTime(DateTime.Now, zooKeeper));
-                _console?.WriteLine($"{GetType().Name} ID <<{ID}>> by <<{zooKeeper.FirstName} {zooKeeper.LastName}>>.");
+                _console?.WriteLine($"{GetType().Name}: {GetType().Name} ID {ID} was fed by {zooKeeper.FirstName} {zooKeeper.LastName}.");
             } else
             {
-                _console?.WriteLine($"Trying to feed {GetType().Name} ID <<{ID}>> not its favorite food.");
+                _console?.WriteLine($"{GetType().Name}: Trying to feed {GetType().Name} ID {ID} not its favorite food.");
                 throw new NotFavoriteFoodException("The animal does not eat this type of food.");
             }
         }
 
         public void AddFeedSchedule(List<int> hours)
         {
-            _console?.WriteLine($"The feed schedule of {GetType().Name} ID <<{ID}>> was changed.");
+            _console?.WriteLine($"{GetType().Name}: The feed schedule of {GetType().Name} ID {ID} was changed.");
             FeedSchedule.AddRange(hours);
         }
 
@@ -68,7 +68,7 @@ namespace ZooCorp.BusinessLogic.Animals
         {
             _isSick = true;
             NeededMedicine = medicine?.GetType().Name;
-            _console?.WriteLine($"{GetType().Name} ID <<{ID}>> got sick.");
+            _console?.WriteLine($"{GetType().Name}: {GetType().Name} ID {ID} got sick.");
         }
 
         public void Heal(Medicine medicine = null)
@@ -77,10 +77,10 @@ namespace ZooCorp.BusinessLogic.Animals
             {
                 NeededMedicine = null;
                 _isSick = false;
-                _console?.WriteLine($"{GetType().Name} ID <<{ID}>> was healed.");
+                _console?.WriteLine($"{GetType().Name}: {GetType().Name} ID {ID} was healed.");
             } else
             {
-                _console?.WriteLine($"Trying to heal {GetType().Name} ID <<{ID}>> with incorrect type of medicine.");
+                _console?.WriteLine($"{GetType().Name}: Trying to heal {GetType().Name} ID {ID} with incorrect type of medicine.");
                 throw new NotNeededMedicineException("The animal does need another type of medicine.");
             }
             

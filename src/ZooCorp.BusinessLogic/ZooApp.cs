@@ -21,14 +21,15 @@ namespace ZooCorp.BusinessLogic
         public void AddZoo(Zoo zoo)
         {
             _zoos.Add(zoo);
-            _console?.WriteLine($"Added zoo in <<{zoo.Location}>> to zoo app.");
+            _console?.WriteLine($"ZooApp: Added zoo in {zoo.Location}.");
         }
 
-        public void CreateZoo(string location)
+        public Zoo CreateZoo(string location)
         {
             var zoo = new Zoo(location, _console);
             AddZoo(zoo);
-            _console?.WriteLine($"Creatrd and added zoo in <<{zoo.Location}>> to zoo app.");
+            _console?.WriteLine($"ZooApp: Created zoo in {zoo.Location}.");
+            return zoo;
         }
 
         public List<Zoo> GetZoos()

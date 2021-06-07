@@ -30,7 +30,7 @@ namespace ZooCorp.BusinessLogic.Employees
         public void AddAnimalExperience(Animal animal)
         {
             AnimalExperiences.Add(animal.GetType().Name);
-            _console?.WriteLine($"Added experience with {animal.GetType().Name} to Veterinarian <<{FirstName} {LastName}>>.");
+            _console?.WriteLine($"Veterinarian: Added experience with {animal.GetType().Name} to Veterinarian {FirstName} {LastName}.");
         }
 
         public bool HasAnimalExperience(Animal animal)
@@ -57,7 +57,7 @@ namespace ZooCorp.BusinessLogic.Employees
             }
 
             animal.Heal(medicine);
-            _console?.WriteLine($"Veterinarian <<{FirstName} {LastName}>> healed {animal.GetType().Name} <<{animal.ID}>>.");
+            _console?.WriteLine($"Veterinarian: Veterinarian {FirstName} {LastName} healed {animal.GetType().Name} ID {animal.ID}.");
 
             return true;
         }
