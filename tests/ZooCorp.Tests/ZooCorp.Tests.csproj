@@ -26,7 +26,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\ZooCorp.BusinessLogic\ZooCorp.BusinessLogic.csproj" />
-    <ProjectReference Include="..\..\ZooCorp.ConsoleApp\ZooCorp.ConsoleApp.csproj" />
   </ItemGroup>
 
 </Project>
