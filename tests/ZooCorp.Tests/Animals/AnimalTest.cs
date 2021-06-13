@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Xunit;
 using Moq;
 using ZooCorp.BusinessLogic.Animals;
 using ZooCorp.BusinessLogic.Medicines;
 using ZooCorp.BusinessLogic.Exceptions;
+using ZooCorp.BusinessLogic.Common;
 
 namespace ZooCorp.Tests.Animals
 {
@@ -24,10 +21,12 @@ namespace ZooCorp.Tests.Animals
         [Fact]
         public void ShouldBeSickAfterMarkedAsSick()
         {
-            var mock = new Mock<Animal>();
+            ZooConsole console = new ZooConsole();
+            var mock = new Mock<Animal>(console);
             mock.Object.MarkSick();
 
             Assert.True(mock.Object.IsSick());
+            Assert.Equal("AnimalProxy: AnimalProxy ID 0 got sick.", console.Messages[0]);
         }
 
         [Fact]
@@ -43,28 +42,33 @@ namespace ZooCorp.Tests.Animals
         [Fact]
         public void ShouldBeNotSickAfterHealingWithNeededMedicine()
         {
-            var mock = new Mock<Animal>();
+            ZooConsole console = new ZooConsole();
+            var mock = new Mock<Animal>(console);
             mock.Object.MarkSick(new Antibiotics());
             mock.Object.Heal(new Antibiotics());
 
             Assert.False(mock.Object.IsSick());
+            Assert.Equal("AnimalProxy: AnimalProxy ID 0 was healed.", console.Messages[1]);
         }
 
         [Fact]
         public void ShouldThrowExceptionAfterHealingWithWrongMedicine()
         {
-            var mock = new Mock<Animal>();
+            ZooConsole console = new ZooConsole();
+            var mock = new Mock<Animal>(console);
             mock.Object.MarkSick(new Antibiotics());
 
-            Assert.Throws<NotNeededMedicineException>(() => mock.Object.Heal(new Antidepression()));
+            Assert.Throws<NotNeededMedicineException>(() => mock.Object.Heal(new AntiDepression()));
             Assert.True(mock.Object.IsSick());
+            Assert.Equal("AnimalProxy: Trying to heal AnimalProxy ID 0 with incorrect type of medicine.",
+                console.Messages[1]);
         }
 
         [Fact]
         public void ShouldHaveFeedSchedule()
         {
             var mock = new Mock<Animal>();
-            mock.Object.FeedSchedule = new List<int>() { 5, 10 };
+            mock.Object.FeedSchedule = new List<int>() {5, 10};
 
             Assert.Equal(2, mock.Object.FeedSchedule.Count);
         }
@@ -72,12 +76,14 @@ namespace ZooCorp.Tests.Animals
         [Fact]
         public void ShouldAddFeedSchedule()
         {
-            var mock = new Mock<Animal>();
-            mock.Object.FeedSchedule = new List<int>() { 5, 10 };
-            mock.Object.AddFeedSchedule(new List<int>() { 12, 14 });
+            ZooConsole console = new ZooConsole();
+            var mock = new Mock<Animal>(console);
+            mock.Object.FeedSchedule = new List<int>() {5, 10};
+            mock.Object.AddFeedSchedule(new List<int>() {12, 14});
 
             Assert.Equal(4, mock.Object.FeedSchedule.Count);
             Assert.Equal(14, mock.Object.FeedSchedule[3]);
+            Assert.Equal("AnimalProxy: The feed schedule of AnimalProxy ID 0 was changed.", console.Messages[0]);
         }
     }
 }

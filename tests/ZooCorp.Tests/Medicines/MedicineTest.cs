@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
+﻿using Xunit;
 using ZooCorp.BusinessLogic.Medicines;
 
 namespace ZooCorp.Tests.Medicines
@@ -17,15 +12,15 @@ namespace ZooCorp.Tests.Medicines
         }
 
         [Fact]
-        public void ShouldBeAbleToCreateAntidepression()
+        public void ShouldBeAbleToCreateAntiDepression()
         {
-            Antidepression antidepression = new Antidepression();
+            AntiDepression antiDepression = new AntiDepression();
         }
 
         [Fact]
-        public void ShouldBeAbleToCreateAntiinflammatory()
+        public void ShouldBeAbleToCreateAntiInflammatory()
         {
-            Antiinflammatory antiinflammatory = new Antiinflammatory();
+            AntiInflammatory antiInflammatory = new AntiInflammatory();
         }
     }
 }

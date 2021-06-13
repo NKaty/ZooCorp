@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ZooCorp.BusinessLogic.Animals.Reptiles;
-using ZooCorp.BusinessLogic.Animals.Birds;
-using ZooCorp.BusinessLogic.Foods;
+﻿using System.Collections.Generic;
 using ZooCorp.BusinessLogic.Common;
 
 namespace ZooCorp.BusinessLogic.Animals.Mammals
@@ -14,9 +7,10 @@ namespace ZooCorp.BusinessLogic.Animals.Mammals
     {
         public override int RequiredSpaceSfFt { get; } = 1000;
 
-        public override string[] FavoriteFood { get; } = new[] { "Grass" };
+        public override string[] FavoriteFood { get; } = new[] {"Grass"};
 
-        public override List<string> FrendlyWith { get; } = new List<string>() { 
+        public override List<string> FriendlyWith { get; } = new List<string>()
+        {
             "Bison",
             "Elephant"
         };
@@ -24,12 +18,12 @@ namespace ZooCorp.BusinessLogic.Animals.Mammals
         public Bison(int id, List<int> feedSchedule = null, IConsole console = null) : base(console)
         {
             ID = id;
-            FeedSchedule = feedSchedule ?? new List<int>() { 15 };
+            FeedSchedule = feedSchedule ?? new List<int>() {15};
         }
 
         public override bool IsFriendlyWith(Animal animal)
         {
-            return FrendlyWith.Contains(animal.GetType().Name);
+            return FriendlyWith.Contains(animal.GetType().Name);
         }
     }
 }

@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using ZooCorp.BusinessLogic;
 using ZooCorp.BusinessLogic.Common;
-using ZooCorp.BusinessLogic.Exceptions;
-using ZooCorp.BusinessLogic.Animals;
 
 namespace ZooCorp.ConsoleApp
 {
@@ -11,7 +9,7 @@ namespace ZooCorp.ConsoleApp
     {
         static void Main(string[] args)
         {
-            var animals = new List<string>() { "Parrot", "Penguin", "Lion", "Bison", "Elephant", "Snake", "Turtle" };
+            var animals = new List<string>() {"Parrot", "Penguin", "Lion", "Bison", "Elephant", "Snake", "Turtle"};
             var console = new ZooConsole();
             var zooApp = new ZooApp(console);
             var zoo1 = zooApp.CreateZoo("London");
@@ -26,12 +24,12 @@ namespace ZooCorp.ConsoleApp
                 }
             }
 
-                foreach (var zoo in zooApp.GetZoos())
+            foreach (var zoo in zooApp.GetZoos())
             {
                 foreach (var animalType in animals)
                 {
                     var animal = zoo.AddAnimals(animalType);
-                    
+
                     if (animalType is "Lion" or "Parrot")
                     {
                         animal.MarkSick();

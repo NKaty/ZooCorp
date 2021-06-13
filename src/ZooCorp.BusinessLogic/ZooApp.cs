@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using ZooCorp.BusinessLogic.Common;
 
 namespace ZooCorp.BusinessLogic
@@ -11,7 +7,7 @@ namespace ZooCorp.BusinessLogic
     {
         private readonly IConsole _console;
 
-        private List<Zoo> _zoos = new List<Zoo>();
+        private readonly List<Zoo> _zoos = new List<Zoo>();
 
         public ZooApp(IConsole console = null)
         {
@@ -27,8 +23,8 @@ namespace ZooCorp.BusinessLogic
         public Zoo CreateZoo(string location)
         {
             var zoo = new Zoo(location, _console);
-            AddZoo(zoo);
             _console?.WriteLine($"ZooApp: Created zoo in {zoo.Location}.");
+            AddZoo(zoo);
             return zoo;
         }
 

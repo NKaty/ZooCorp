@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using ZooCorp.BusinessLogic.Animals;
 using ZooCorp.BusinessLogic.Common;
 using ZooCorp.BusinessLogic.Exceptions;
@@ -18,13 +14,14 @@ namespace ZooCorp.BusinessLogic
 
         public Zoo ParentZoo { get; private set; }
 
-        public int SqureFeet { get; private set; }
+        public int SquareFeet { get; private set; }
 
-        public Enclosure(string name, Zoo parentZoo, int squreFeet, List<Animal> animals = null, IConsole console = null)
+        public Enclosure(string name, Zoo parentZoo, int squareFeet, List<Animal> animals = null,
+            IConsole console = null)
         {
             Name = name;
             ParentZoo = parentZoo;
-            SqureFeet = squreFeet;
+            SquareFeet = squareFeet;
             Animals = animals ?? new List<Animal>();
             _console = console;
         }
@@ -33,7 +30,7 @@ namespace ZooCorp.BusinessLogic
         {
             if (!IsAvailableSpace(animal))
             {
-                _console?.WriteLine($"Enclosure: The enclosure {Name} doesn't have available space");
+                _console?.WriteLine($"Enclosure: The enclosure {Name} doesn't have available space.");
                 throw new NoAvailableSpaceException($"The enclosure {Name} doesn't have available space.");
             }
 
@@ -49,7 +46,7 @@ namespace ZooCorp.BusinessLogic
 
         public bool IsAvailableSpace(Animal newAnimal)
         {
-            int availableSpace = SqureFeet;
+            int availableSpace = SquareFeet;
 
             foreach (var animal in Animals)
             {

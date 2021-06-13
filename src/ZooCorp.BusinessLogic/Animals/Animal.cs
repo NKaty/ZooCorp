@@ -17,13 +17,13 @@ namespace ZooCorp.BusinessLogic.Animals
 
         private readonly IConsole _console;
 
-        public int ID { get; set; }
+        public int ID { get; protected set; }
 
         public abstract int RequiredSpaceSfFt { get; }
 
         public abstract string[] FavoriteFood { get; }
 
-        public abstract List<string> FrendlyWith { get; }
+        public abstract List<string> FriendlyWith { get; }
 
         public List<FeedTime> FeedTimes { get; } = new List<FeedTime>();
 
@@ -51,8 +51,8 @@ namespace ZooCorp.BusinessLogic.Animals
                 return true;
             }
 
-            return !(FeedTimes[FeedTimes.Count - 1].FeedAnimalTime >= dayBeginning &&
-            FeedTimes[FeedTimes.Count - 2].FeedAnimalTime >= dayBeginning);
+            return !(FeedTimes[^1].FeedAnimalTime >= dayBeginning &&
+            FeedTimes[^2].FeedAnimalTime >= dayBeginning);
         }
 
         public abstract bool IsFriendlyWith(Animal animal);
@@ -65,7 +65,7 @@ namespace ZooCorp.BusinessLogic.Animals
                 _console?.WriteLine($"{GetType().Name}: {GetType().Name} ID {ID} was fed by {zooKeeper.FirstName} {zooKeeper.LastName}.");
             } else
             {
-                _console?.WriteLine($"{GetType().Name}: Trying to feed {GetType().Name} ID {ID} not its favorite food.");
+                _console?.WriteLine($"{GetType().Name}: Trying to feed {GetType().Name} ID {ID} with not its favorite food.");
                 throw new NotFavoriteFoodException("The animal does not eat this type of food.");
             }
         }

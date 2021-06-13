@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ZooCorp.BusinessLogic.Employees;
 using ZooCorp.BusinessLogic.Employees.HireValidators;
 using ZooCorp.BusinessLogic.Employees.HireValidators.ValidationErrors;
@@ -14,11 +12,11 @@ namespace ZooCorp.BusinessLogic
 {
     public class Zoo
     {
-        private int _idCounter = 0;
+        private int _idCounter;
 
         private readonly IConsole _console;
 
-        private List<(string, string)> _animalTypes = new List<(string, string)>()
+        private readonly List<(string, string)> _animalTypes = new List<(string, string)>()
         {
             ("Birds", "Parrot"),
             ("Birds", "Penguin"),
@@ -42,9 +40,9 @@ namespace ZooCorp.BusinessLogic
             _console?.WriteLine($"Zoo: Created zoo in {location}.");
         }
 
-        public Enclosure AddEnclosure(string name, int squreFeet)
+        public Enclosure AddEnclosure(string name, int squareFeet)
         {
-            var enclosure = new Enclosure(name, this, squreFeet, null, _console);
+            var enclosure = new Enclosure(name, this, squareFeet, null, _console);
             Enclosures.Add(enclosure);
             _console?.WriteLine($"Zoo: Created enclosure {name} in zoo in {Location}.");
             return enclosure;
@@ -61,13 +59,14 @@ namespace ZooCorp.BusinessLogic
                 }
             }
 
-            throw new NoAvailableEnclosureException($"There is no available enclosure for this type of animal - {animal.GetType().Name}.");
+            throw new NoAvailableEnclosureException(
+                $"There is no available enclosure for this type of animal - {animal.GetType().Name}.");
         }
 
         public Animal AddAnimals(string animalType, List<int> feedSchedule = null)
         {
-            var zooAnimalTypes = _animalTypes.Where(type => type.Item2.ToLower() == animalType.ToLower());
-            if (zooAnimalTypes.Count() == 0)
+            var zooAnimalTypes = _animalTypes.Where(type => type.Item2.ToLower() == animalType.ToLower()).ToList();
+            if (zooAnimalTypes.Count == 0)
             {
                 _console?.WriteLine($"Zoo: Trying to add unknown type of animal to the zoo in {Location}.");
                 throw new UnknownAnimalException($"The zoo does not keep this type of animals - {animalType}.");
@@ -76,16 +75,24 @@ namespace ZooCorp.BusinessLogic
             var zooAnimalType = zooAnimalTypes.First();
             string animalClassName = $"ZooCorp.BusinessLogic.Animals.{zooAnimalType.Item1}.{zooAnimalType.Item2}";
             Type classType = Type.GetType(animalClassName);
-            var animal = Activator.CreateInstance(classType, new object[] { ++_idCounter, feedSchedule, _console }) as Animal;
+            if (classType is null)
+            {
+                _console?.WriteLine($"Zoo: Trying to add unknown type of animal to the zoo in {Location}.");
+                throw new UnknownAnimalException($"The zoo does not keep this type of animals - {animalType}.");
+            }
+
+            var animal =
+                Activator.CreateInstance(classType, new object[] {++_idCounter, feedSchedule, _console}) as Animal;
 
             var enclosure = FindAvailableEnclosure(animal);
             enclosure.AddAnimals(animal);
-            _console?.WriteLine($"Zoo: Added {animalType} ID {animal.ID} to {enclosure.Name} in zoo in {Location}.");
+            _console?.WriteLine($"Zoo: Added {animalType} ID {animal?.ID} to {enclosure.Name} in zoo in {Location}.");
 
             return animal;
         }
 
-        public void CreateEmployee(string employeeType, string firstName, string lastName, List<string> animalExperiences = null)
+        public void CreateEmployee(string employeeType, string firstName, string lastName,
+            List<string> animalExperiences = null)
         {
             if (employeeType == "Veterinarian")
             {
@@ -102,7 +109,8 @@ namespace ZooCorp.BusinessLogic
             }
 
             _console?.WriteLine($"Zoo: Trying to hire unknown type of employee.");
-            throw new UnknownEmployeeException($"The zoo does not have this type of employee in the zoo in {Location}.");
+            throw new UnknownEmployeeException(
+                $"The zoo does not have this type of employee in the zoo in {Location}.");
         }
 
         public void HireEmployee(IEmployee employee)
@@ -110,49 +118,58 @@ namespace ZooCorp.BusinessLogic
             IHireValidator hireValidator = HireValidatorProvider.GetHireValidator(employee);
             var errors = hireValidator.ValidateEmployee(employee, GetAnimalsOfEachType());
 
-            if (errors.Count() != 0)
+            if (errors.Count != 0)
             {
-                _console?.WriteLine($"Zoo: {employee.GetType().Name} {employee.FirstName} {employee.LastName} does not have needed experience.");
+                _console?.WriteLine(
+                    $"Zoo: {employee.GetType().Name} {employee.FirstName} {employee.LastName} does not have needed experience.");
                 foreach (var error in errors)
                 {
-                    _console?.WriteLine($"{(error as AnimalExperiencesValidationError).Animal}: {(error as AnimalExperiencesValidationError).Message}");
+                    _console?.WriteLine(
+                        $"{(error as AnimalExperiencesValidationError)?.Animal}: {(error as AnimalExperiencesValidationError)?.Message}");
                 }
-                throw new NoNeededExperienceException($"The {employee.GetType().Name} does not have excperience with all the zoo animals");
+
+                throw new NoNeededExperienceException(
+                    $"The {employee.GetType().Name} does not have experience with all the zoo animals");
             }
 
-            _console?.WriteLine($"Zoo: Hired {employee.GetType().Name} {employee.FirstName} {employee.LastName} in zoo in {Location}.");
+            _console?.WriteLine(
+                $"Zoo: Hired {employee.GetType().Name} {employee.FirstName} {employee.LastName} in zoo in {Location}.");
             Employees.Add(employee);
         }
 
         public void FeedAnimals(DateTime dateTime)
         {
-            var dividedAnimals = DivideAnimalsBetweenEmployees("ZooKeeper", (Animal animal) => animal.IsHungry(dateTime));
+            var dividedAnimals =
+                DivideAnimalsBetweenEmployees("ZooKeeper", (animal) => animal.IsHungry(dateTime));
 
             foreach (var group in dividedAnimals)
             {
                 foreach (var animal in group.Item2)
                 {
-                    (group.Item1 as ZooKeeper).FeedAnimal(animal);
-                    _console?.WriteLine($"Zoo: {animal.GetType().Name} ID {animal.ID} was fed by {group.Item1.FirstName} {group.Item1.LastName} in zoo in {Location}.");
+                    (group.Item1 as ZooKeeper)?.FeedAnimal(animal);
+                    _console?.WriteLine(
+                        $"Zoo: {animal.GetType().Name} ID {animal.ID} was fed by {group.Item1.FirstName} {group.Item1.LastName} in zoo in {Location}.");
                 }
             }
         }
 
         public void HealAnimals()
         {
-            var dividedAnimals = DivideAnimalsBetweenEmployees("Veterinarian", (Animal animal) => animal.IsSick());
+            var dividedAnimals = DivideAnimalsBetweenEmployees("Veterinarian", (animal) => animal.IsSick());
 
             foreach (var group in dividedAnimals)
             {
                 foreach (var animal in group.Item2)
                 {
-                    (group.Item1 as Veterinarian).HealAnimal(animal);
-                    _console?.WriteLine($"Zoo: {animal.GetType().Name} ID {animal.ID} was healed by {group.Item1.FirstName} {group.Item1.LastName} in zoo in {Location}.");
+                    (group.Item1 as Veterinarian)?.HealAnimal(animal);
+                    _console?.WriteLine(
+                        $"Zoo: {animal.GetType().Name} ID {animal.ID} was healed by {group.Item1.FirstName} {group.Item1.LastName} in zoo in {Location}.");
                 }
             }
         }
 
-        public List<(IEmployee, List<Animal>)> DivideAnimalsBetweenEmployees(string employeeType, Predicate<Animal> checkAnimal)
+        public List<(IEmployee, List<Animal>)> DivideAnimalsBetweenEmployees(string employeeType,
+            Predicate<Animal> checkAnimal)
         {
             var employees = Employees.Where(e => e.GetType().Name == employeeType);
 
@@ -179,9 +196,11 @@ namespace ZooCorp.BusinessLogic
                                 noEmployeeWithAnimalExperience = true;
                             }
                         }
+
                         if (noEmployeeWithAnimalExperience)
                         {
-                            throw new UnknownAnimalException($"The zoo does not keep this type of animals - {animal.GetType().Name}.");
+                            throw new UnknownAnimalException(
+                                $"The zoo does not keep this type of animals - {animal.GetType().Name}.");
                         }
                     }
                 }

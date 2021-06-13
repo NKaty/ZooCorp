@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ZooCorp.BusinessLogic.Exceptions;
+﻿using ZooCorp.BusinessLogic.Exceptions;
 
 namespace ZooCorp.BusinessLogic.Employees.HireValidators
 {
@@ -11,13 +6,14 @@ namespace ZooCorp.BusinessLogic.Employees.HireValidators
     {
         public static IHireValidator GetHireValidator(IEmployee employee)
         {
-            string emploeeType = employee.GetType().Name;
+            string employeeType = employee.GetType().Name;
 
-            if (emploeeType == "Veterinarian")
+            if (employeeType == "Veterinarian")
             {
                 return new VeterinarianHireValidator();
             }
-            if (emploeeType == "ZooKeeper")
+
+            if (employeeType == "ZooKeeper")
             {
                 return new ZooKeeperHireValidator();
             }

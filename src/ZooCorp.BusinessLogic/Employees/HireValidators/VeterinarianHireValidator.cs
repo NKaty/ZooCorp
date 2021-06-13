@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using ZooCorp.BusinessLogic.Animals;
 using ZooCorp.BusinessLogic.Exceptions;
 using ZooCorp.BusinessLogic.Employees.HireValidators.ValidationErrors;
@@ -16,7 +12,7 @@ namespace ZooCorp.BusinessLogic.Employees.HireValidators
             List<ValidationError> validationErrors = new List<ValidationError>();
             Veterinarian veterinarian = employee as Veterinarian;
 
-            if (veterinarian == null)
+            if (veterinarian is null)
             {
                 throw new UnknownEmployeeException("The zoo does not have this type of employees.");
             }

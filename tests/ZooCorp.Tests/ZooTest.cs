@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using ZooCorp.BusinessLogic;
 using ZooCorp.BusinessLogic.Animals;
@@ -11,6 +9,7 @@ using ZooCorp.BusinessLogic.Animals.Mammals;
 using ZooCorp.BusinessLogic.Animals.Reptiles;
 using ZooCorp.BusinessLogic.Exceptions;
 using ZooCorp.BusinessLogic.Employees;
+using ZooCorp.BusinessLogic.Common;
 
 namespace ZooCorp.Tests
 {
@@ -19,43 +18,49 @@ namespace ZooCorp.Tests
         [Fact]
         public void ShouldBeAbleToCreateZoo()
         {
-            Zoo zoo = new Zoo("London");
+            ZooConsole console = new ZooConsole();
+            Zoo zoo = new Zoo("London", console);
             Assert.Equal("London", zoo.Location);
+            Assert.Equal("Zoo: Created zoo in London.", console.Messages[0]);
         }
 
         [Fact]
         public void ShouldBeAbleToCreateEnclosureInZoo()
         {
-            Zoo zoo = new Zoo("London");
+            ZooConsole console = new ZooConsole();
+            Zoo zoo = new Zoo("London", console);
             zoo.AddEnclosure("Enclosure1", 10000);
             Assert.Equal("Enclosure1", zoo.Enclosures[0].Name);
-            Assert.Equal(10000, zoo.Enclosures[0].SqureFeet);
+            Assert.Equal(10000, zoo.Enclosures[0].SquareFeet);
             Assert.Equal(zoo, zoo.Enclosures[0].ParentZoo);
+            Assert.Equal("Zoo: Created enclosure Enclosure1 in zoo in London.", console.Messages[1]);
         }
 
         [Fact]
         public void ShouldFindAvailableEnclosure()
         {
-            Zoo zoo = new Zoo("London");
+            ZooConsole console = new ZooConsole();
+            Zoo zoo = new Zoo("London", console);
             zoo.AddEnclosure("Enclosure1", 10000);
             Animal animal = new Parrot(1);
             Enclosure enclosure1 = zoo.FindAvailableEnclosure(animal);
             Assert.Equal("Enclosure1", enclosure1.Name);
-            Assert.Equal(10000, enclosure1.SqureFeet);
+            Assert.Equal(10000, enclosure1.SquareFeet);
             Assert.Equal(zoo, enclosure1.ParentZoo);
             enclosure1.AddAnimals(animal);
             Enclosure enclosure2 = zoo.FindAvailableEnclosure(new Elephant(2));
             Assert.Equal("Enclosure1", enclosure2.Name);
-            Assert.Equal(10000, enclosure2.SqureFeet);
+            Assert.Equal(10000, enclosure2.SquareFeet);
             Assert.Equal(zoo, enclosure2.ParentZoo);
+            Assert.Equal("Zoo: Found an available enclosure Enclosure1 in zoo in London.", console.Messages[2]);
         }
 
         public static IEnumerable<object[]> DataEnclosureForNoAvailableEnclosureException =>
-        new List<object[]>
-        {
-            new object [] { new Animal[] { new Bison(1), new Elephant(2) } },
-            new object [] { new Animal[] { new Lion(1), new Snake(2) } }
-        };
+            new List<object[]>
+            {
+                new object[] {new Animal[] {new Bison(1), new Elephant(2)}},
+                new object[] {new Animal[] {new Lion(1), new Snake(2)}}
+            };
 
         [Theory]
         [MemberData(nameof(DataEnclosureForNoAvailableEnclosureException))]
@@ -80,24 +85,29 @@ namespace ZooCorp.Tests
         [InlineData("Turtle")]
         public void ShouldCreateAnimalAndAddItToEnclosure(string animal)
         {
-            Zoo zoo = new Zoo("London");
+            ZooConsole console = new ZooConsole();
+            Zoo zoo = new Zoo("London", console);
             zoo.AddEnclosure("Enclosure1", 10000);
-            zoo.AddAnimals(animal, new List<int>() { 8, 18 });
+            zoo.AddAnimals(animal, new List<int>() {8, 18});
 
             Assert.Equal(animal, zoo.Enclosures[0].Animals[0].GetType().Name);
+            Assert.Equal($"Zoo: Added {animal} ID {zoo.Enclosures[0].Animals[0].ID} to Enclosure1 in zoo in London.",
+                console.Messages[4]);
         }
 
         [Fact]
         public void ShouldAddAnimalsThrowUnknownAnimalException()
         {
-            Zoo zoo = new Zoo("London");
+            ZooConsole console = new ZooConsole();
+            Zoo zoo = new Zoo("London", console);
             zoo.AddEnclosure("Enclosure1", 10000);
 
-            Assert.Throws<UnknownAnimalException>(() => zoo.AddAnimals("Horse", new List<int>() { 8, 18 }));
+            Assert.Throws<UnknownAnimalException>(() => zoo.AddAnimals("Horse", new List<int>() {8, 18}));
+            Assert.Equal("Zoo: Trying to add unknown type of animal to the zoo in London.", console.Messages[2]);
         }
 
         [Fact]
-        public void ShouldAnimalsHaveUniqueID()
+        public void ShouldAnimalsHaveUniqueId()
         {
             Zoo zoo = new Zoo("London");
             Enclosure enclosure = zoo.AddEnclosure("Enclosure1", 10000);
@@ -110,17 +120,19 @@ namespace ZooCorp.Tests
         }
 
         public static IEnumerable<object[]> DataEmployeeToCreateEmployee =>
-        new List<object[]>
-        {
-            new object [] { "Veterinarian", "Bob", "Smith", new List<string>() { "Elephant", "Parrot", "Lion" } },
-            new object [] { "ZooKeeper", "Bob", "Smith", new List<string>() { "Elephant", "Parrot", "Lion" } }
-        };
+            new List<object[]>
+            {
+                new object[] {"Veterinarian", "Bob", "Smith", new List<string>() {"Elephant", "Parrot", "Lion"}},
+                new object[] {"ZooKeeper", "Bob", "Smith", new List<string>() {"Elephant", "Parrot", "Lion"}}
+            };
 
         [Theory]
         [MemberData(nameof(DataEmployeeToCreateEmployee))]
-        public void ShouldCreateAndHireExperiencedEmployee(string type, string firstName, string lastName, List<string> animals)
+        public void ShouldCreateAndHireExperiencedEmployee(string type, string firstName, string lastName,
+            List<string> animals)
         {
-            Zoo zoo = new Zoo("London");
+            ZooConsole console = new ZooConsole();
+            Zoo zoo = new Zoo("London", console);
             zoo.AddEnclosure("Enclosure1", 10000);
             zoo.AddEnclosure("Enclosure2", 10000);
             zoo.AddAnimals("parrot");
@@ -130,28 +142,32 @@ namespace ZooCorp.Tests
 
             Assert.Equal("Bob", zoo.Employees[0].FirstName);
             Assert.Equal("Smith", zoo.Employees[0].LastName);
+            Assert.Equal($"Zoo: Created {type} Bob Smith in zoo in London.", console.Messages[13]);
         }
 
         [Fact]
         public void ShouldThrowUnknownEmployeeException()
         {
-            Zoo zoo = new Zoo("London");
+            ZooConsole console = new ZooConsole();
+            Zoo zoo = new Zoo("London", console);
 
             Assert.Throws<UnknownEmployeeException>(() => zoo.CreateEmployee("Janitor", "Bob", "Smith"));
+            Assert.Equal("Zoo: Trying to hire unknown type of employee.", console.Messages[1]);
         }
 
         public static IEnumerable<object[]> DataEmployeeToCheckExperience =>
-        new List<object[]>
-        {
-            new object [] { new Veterinarian("Bob", "Smith", new List<string>() { "Elephant", "Parrot", "Lion" }) },
-            new object [] { new ZooKeeper("Bob", "Smith", new List<string>() { "Elephant", "Parrot", "Lion" }) }
-        };
+            new List<object[]>
+            {
+                new object[] {new Veterinarian("Bob", "Smith", new List<string>() {"Elephant", "Parrot", "Lion"})},
+                new object[] {new ZooKeeper("Bob", "Smith", new List<string>() {"Elephant", "Parrot", "Lion"})}
+            };
 
         [Theory]
         [MemberData(nameof(DataEmployeeToCheckExperience))]
         public void ShouldHireExperiencedEmployee(IEmployee employee)
         {
-            Zoo zoo = new Zoo("London");
+            ZooConsole console = new ZooConsole();
+            Zoo zoo = new Zoo("London", console);
             zoo.AddEnclosure("Enclosure1", 10000);
             zoo.AddEnclosure("Enclosure2", 10000);
             zoo.AddAnimals("parrot");
@@ -161,13 +177,17 @@ namespace ZooCorp.Tests
 
             Assert.Equal("Bob", zoo.Employees[0].FirstName);
             Assert.Equal("Smith", zoo.Employees[0].LastName);
+            Assert.Equal(
+                $"Zoo: Hired {employee.GetType().Name} {employee.FirstName} {employee.LastName} in zoo in London.",
+                console.Messages[12]);
         }
 
         [Theory]
         [MemberData(nameof(DataEmployeeToCheckExperience))]
         public void ShouldTrowNoNeededExperienceException(IEmployee employee)
         {
-            Zoo zoo = new Zoo("London");
+            ZooConsole console = new ZooConsole();
+            Zoo zoo = new Zoo("London", console);
             zoo.AddEnclosure("Enclosure1", 10000);
             zoo.AddEnclosure("Enclosure2", 10000);
             zoo.AddAnimals("parrot");
@@ -175,6 +195,10 @@ namespace ZooCorp.Tests
             zoo.AddAnimals("elephant");
 
             Assert.Throws<NoNeededExperienceException>(() => zoo.HireEmployee(employee));
+            Assert.Equal(
+                $"Zoo: {employee.GetType().Name} {employee.FirstName} {employee.LastName} does not have needed experience.",
+                console.Messages[12]);
+            Assert.Equal("Snake: No experience", console.Messages[13]);
         }
 
         [Fact]
@@ -188,8 +212,10 @@ namespace ZooCorp.Tests
             zoo.AddAnimals("lion");
             zoo.AddAnimals("elephant");
             zoo.AddAnimals("penguin");
-            var veterinarian1 = new Veterinarian("Bob", "Smith", new List<string>() { "Elephant", "Parrot", "Lion", "Penguin" });
-            var veterinarian2 = new Veterinarian("Tom", "Ford", new List<string>() { "Elephant", "Parrot", "Lion", "Penguin" });
+            var veterinarian1 = new Veterinarian("Bob", "Smith",
+                new List<string>() {"Elephant", "Parrot", "Lion", "Penguin"});
+            var veterinarian2 =
+                new Veterinarian("Tom", "Ford", new List<string>() {"Elephant", "Parrot", "Lion", "Penguin"});
             zoo.HireEmployee(veterinarian1);
             zoo.HireEmployee(veterinarian2);
             var dividedAnimals = zoo.DivideAnimalsBetweenEmployees("Veterinarian", animal => true);
@@ -208,13 +234,16 @@ namespace ZooCorp.Tests
             zoo.AddAnimals("lion");
             zoo.AddAnimals("elephant");
             zoo.AddAnimals("penguin");
-            var veterinarian1 = new Veterinarian("Bob", "Smith", new List<string>() { "Elephant", "Parrot", "Lion", "Penguin" });
-            var veterinarian2 = new Veterinarian("Tom", "Ford", new List<string>() { "Elephant", "Parrot", "Lion", "Penguin" });
+            var veterinarian1 = new Veterinarian("Bob", "Smith",
+                new List<string>() {"Elephant", "Parrot", "Lion", "Penguin"});
+            var veterinarian2 =
+                new Veterinarian("Tom", "Ford", new List<string>() {"Elephant", "Parrot", "Lion", "Penguin"});
             zoo.HireEmployee(veterinarian1);
             zoo.HireEmployee(veterinarian2);
             zoo.AddAnimals("turtle");
 
-            Assert.Throws<UnknownAnimalException>(() => zoo.DivideAnimalsBetweenEmployees("Veterinarian", animal => true));
+            Assert.Throws<UnknownAnimalException>(() =>
+                zoo.DivideAnimalsBetweenEmployees("Veterinarian", animal => true));
         }
 
         [Fact]
@@ -228,8 +257,9 @@ namespace ZooCorp.Tests
             zoo.AddAnimals("lion");
             zoo.AddAnimals("elephant");
             zoo.AddAnimals("penguin");
-            var zooKeeper1 = new ZooKeeper("Bob", "Smith", new List<string>() { "Elephant", "Parrot", "Lion", "Penguin" });
-            var zooKeeper2 = new ZooKeeper("Tom", "Ford", new List<string>() { "Elephant", "Parrot", "Lion", "Penguin" });
+            var zooKeeper1 =
+                new ZooKeeper("Bob", "Smith", new List<string>() {"Elephant", "Parrot", "Lion", "Penguin"});
+            var zooKeeper2 = new ZooKeeper("Tom", "Ford", new List<string>() {"Elephant", "Parrot", "Lion", "Penguin"});
             zoo.HireEmployee(zooKeeper1);
             zoo.HireEmployee(zooKeeper2);
             zoo.AddAnimals("turtle");
@@ -248,8 +278,9 @@ namespace ZooCorp.Tests
             zoo.AddAnimals("lion");
             zoo.AddAnimals("elephant");
             zoo.AddAnimals("penguin");
-            var zooKeeper1 = new ZooKeeper("Bob", "Smith", new List<string>() { "Elephant", "Parrot", "Lion", "Penguin" });
-            var zooKeeper2 = new ZooKeeper("Tom", "Ford", new List<string>() { "Elephant", "Parrot", "Lion", "Penguin" });
+            var zooKeeper1 =
+                new ZooKeeper("Bob", "Smith", new List<string>() {"Elephant", "Parrot", "Lion", "Penguin"});
+            var zooKeeper2 = new ZooKeeper("Tom", "Ford", new List<string>() {"Elephant", "Parrot", "Lion", "Penguin"});
             zoo.HireEmployee(zooKeeper1);
             zoo.HireEmployee(zooKeeper2);
             var dividedAnimals = zoo.DivideAnimalsBetweenEmployees("ZooKeeper", animal => true);
@@ -261,7 +292,8 @@ namespace ZooCorp.Tests
         [Fact]
         public void ShouldKeepersFeedAnimals()
         {
-            Zoo zoo = new Zoo("London");
+            ZooConsole console = new ZooConsole();
+            Zoo zoo = new Zoo("London", console);
             zoo.AddEnclosure("Enclosure1", 10000);
             zoo.AddEnclosure("Enclosure2", 10000);
             zoo.AddEnclosure("Enclosure3", 10000);
@@ -269,8 +301,9 @@ namespace ZooCorp.Tests
             var lion = zoo.AddAnimals("lion");
             var penguin = zoo.AddAnimals("penguin");
             var penguin2 = zoo.AddAnimals("penguin");
-            var zooKeeper1 = new ZooKeeper("Bob", "Smith", new List<string>() { "Elephant", "Parrot", "Lion", "Penguin" });
-            var zooKeeper2 = new ZooKeeper("Tom", "Ford", new List<string>() { "Elephant", "Parrot", "Lion", "Penguin" });
+            var zooKeeper1 =
+                new ZooKeeper("Bob", "Smith", new List<string>() {"Elephant", "Parrot", "Lion", "Penguin"});
+            var zooKeeper2 = new ZooKeeper("Tom", "Ford", new List<string>() {"Elephant", "Parrot", "Lion", "Penguin"});
             zoo.HireEmployee(zooKeeper1);
             zoo.HireEmployee(zooKeeper2);
             zooKeeper1.FeedAnimal(parrot);
@@ -283,12 +316,14 @@ namespace ZooCorp.Tests
             Assert.Single(lion.FeedTimes);
             Assert.Single(penguin.FeedTimes);
             Assert.Equal(2, penguin2.FeedTimes.Count);
+            Assert.Equal("Zoo: Parrot ID 1 was fed by Bob Smith in zoo in London.", console.Messages[26]);
         }
 
         [Fact]
         public void ShouldVeterinarianHealAnimals()
         {
-            Zoo zoo = new Zoo("London");
+            ZooConsole console = new ZooConsole();
+            Zoo zoo = new Zoo("London", console);
             zoo.AddEnclosure("Enclosure1", 10000);
             zoo.AddEnclosure("Enclosure2", 10000);
             zoo.AddEnclosure("Enclosure3", 10000);
@@ -300,8 +335,10 @@ namespace ZooCorp.Tests
             elephant.MarkSick();
             var penguin = zoo.AddAnimals("penguin");
             penguin.MarkSick();
-            var veterinarian1 = new Veterinarian("Bob", "Smith", new List<string>() { "Elephant", "Parrot", "Lion", "Penguin" });
-            var veterinarian2 = new Veterinarian("Tom", "Ford", new List<string>() { "Elephant", "Parrot", "Lion", "Penguin" });
+            var veterinarian1 = new Veterinarian("Bob", "Smith",
+                new List<string>() {"Elephant", "Parrot", "Lion", "Penguin"});
+            var veterinarian2 =
+                new Veterinarian("Tom", "Ford", new List<string>() {"Elephant", "Parrot", "Lion", "Penguin"});
             zoo.HireEmployee(veterinarian1);
             zoo.HireEmployee(veterinarian2);
             Assert.True(parrot.IsSick());
@@ -313,6 +350,7 @@ namespace ZooCorp.Tests
             Assert.False(lion.IsSick());
             Assert.False(elephant.IsSick());
             Assert.False(penguin.IsSick());
+            Assert.Equal("Zoo: Parrot ID 1 was healed by Bob Smith in zoo in London.", console.Messages[23]);
         }
     }
 }

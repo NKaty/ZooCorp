@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Xunit;
 using ZooCorp.BusinessLogic.Animals;
 using ZooCorp.BusinessLogic.Animals.Birds;
@@ -26,8 +22,10 @@ namespace ZooCorp.Tests.Employees.HireValidators
         public void ShouldZooKeeperHaveNeededExperience()
         {
             VeterinarianHireValidator veterinarianHireValidator = new VeterinarianHireValidator();
-            Veterinarian veterinarian = new Veterinarian("Bob", "Smith", new List<string>() { "Elephant", "Parrot", "Lion" });
-            Assert.Empty(veterinarianHireValidator.ValidateEmployee(veterinarian, new List<Animal>() {
+            Veterinarian veterinarian =
+                new Veterinarian("Bob", "Smith", new List<string>() {"Elephant", "Parrot", "Lion"});
+            Assert.Empty(veterinarianHireValidator.ValidateEmployee(veterinarian, new List<Animal>()
+            {
                 new Parrot(1),
                 new Lion(2),
                 new Elephant(3)
@@ -38,8 +36,10 @@ namespace ZooCorp.Tests.Employees.HireValidators
         public void ShouldNotZooKeeperHaveNeededExperience()
         {
             VeterinarianHireValidator veterinarianHireValidator = new VeterinarianHireValidator();
-            Veterinarian veterinarian = new Veterinarian("Bob", "Smith", new List<string>() { "Elephant", "Parrot", "Lion" });
-            var errors = veterinarianHireValidator.ValidateEmployee(veterinarian, new List<Animal>() {
+            Veterinarian veterinarian =
+                new Veterinarian("Bob", "Smith", new List<string>() {"Elephant", "Parrot", "Lion"});
+            var errors = veterinarianHireValidator.ValidateEmployee(veterinarian, new List<Animal>()
+            {
                 new Parrot(1),
                 new Penguin(2),
                 new Elephant(3)
@@ -52,8 +52,9 @@ namespace ZooCorp.Tests.Employees.HireValidators
         public void ShouldThrowUnknownEmployeeException()
         {
             VeterinarianHireValidator veterinarianHireValidator = new VeterinarianHireValidator();
-            ZooKeeper veterinarian = new ZooKeeper("Bob", "Smith", new List<string>() { "Elephant" });
-            Assert.Throws<UnknownEmployeeException>(() => veterinarianHireValidator.ValidateEmployee(veterinarian, new List<Animal>() { new Parrot(1) }));
+            ZooKeeper veterinarian = new ZooKeeper("Bob", "Smith", new List<string>() {"Elephant"});
+            Assert.Throws<UnknownEmployeeException>(() =>
+                veterinarianHireValidator.ValidateEmployee(veterinarian, new List<Animal>() {new Parrot(1)}));
         }
     }
 }

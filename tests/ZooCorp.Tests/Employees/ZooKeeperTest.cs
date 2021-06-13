@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Xunit;
+using ZooCorp.BusinessLogic.Common;
 using ZooCorp.BusinessLogic.Employees;
 using ZooCorp.BusinessLogic.Animals.Birds;
 
@@ -14,7 +11,7 @@ namespace ZooCorp.Tests.Employees
         [Fact]
         public void ShouldBeAbleToCreateZooKeeper()
         {
-            ZooKeeper zooKeeper = new ZooKeeper("Bob", "Smith", new List<string>() { "Bison" });
+            ZooKeeper zooKeeper = new ZooKeeper("Bob", "Smith", new List<string>() {"Bison"});
             Assert.Equal("Bob", zooKeeper.FirstName);
             Assert.Equal("Smith", zooKeeper.LastName);
             Assert.Equal("Bison", zooKeeper.AnimalExperiences[0]);
@@ -23,9 +20,11 @@ namespace ZooCorp.Tests.Employees
         [Fact]
         public void ShouldBeAbleToAddAnimalExperience()
         {
-            ZooKeeper zooKeeper = new ZooKeeper("Bob", "Smith");
+            ZooConsole console = new ZooConsole();
+            ZooKeeper zooKeeper = new ZooKeeper("Bob", "Smith", null, console);
             zooKeeper.AddAnimalExperience(new Parrot(1));
             Assert.Equal("Parrot", zooKeeper.AnimalExperiences[0]);
+            Assert.Equal("ZooKeeper: Added experience with Parrot to ZooKeeper Bob Smith.", console.Messages[0]);
         }
 
         [Fact]
@@ -46,14 +45,16 @@ namespace ZooCorp.Tests.Employees
         [Fact]
         public void ShouldFeedAnimalIfHasAnimalExperience()
         {
-            ZooKeeper zooKeeper = new ZooKeeper("Bob", "Smith", new List<string>() { "Parrot" });
+            ZooConsole console = new ZooConsole();
+            ZooKeeper zooKeeper = new ZooKeeper("Bob", "Smith", new List<string>() {"Parrot"}, console);
             Assert.True(zooKeeper.FeedAnimal(new Parrot(1)));
+            Assert.Equal("ZooKeeper: ZooKeeper Bob Smith fed Parrot ID 1.", console.Messages[0]);
         }
 
         [Fact]
         public void ShouldNotFeedAnimalIfDoesNotHaveAnimalExperience()
         {
-            ZooKeeper zooKeeper = new ZooKeeper("Bob", "Smith", new List<string>() { "Parrot" });
+            ZooKeeper zooKeeper = new ZooKeeper("Bob", "Smith", new List<string>() {"Parrot"});
             Assert.False(zooKeeper.FeedAnimal(new Penguin(1)));
         }
     }

@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using ZooCorp.BusinessLogic.Animals;
 using ZooCorp.BusinessLogic.Animals.Birds;
@@ -11,6 +8,7 @@ using ZooCorp.BusinessLogic.Animals.Reptiles;
 using ZooCorp.BusinessLogic.Foods;
 using ZooCorp.BusinessLogic.Employees;
 using ZooCorp.BusinessLogic.Exceptions;
+using ZooCorp.BusinessLogic.Common;
 
 namespace ZooCorp.Tests.Animals.Mammals
 {
@@ -19,7 +17,7 @@ namespace ZooCorp.Tests.Animals.Mammals
         [Fact]
         public void ShouldBeAbleToCreateBison()
         {
-            Bison bison = new Bison(1, new List<int>() { 5, 10 });
+            Bison bison = new Bison(1, new List<int>() {5, 10});
             Assert.Equal(1, bison.ID);
             Assert.Equal(5, bison.FeedSchedule[0]);
         }
@@ -39,11 +37,11 @@ namespace ZooCorp.Tests.Animals.Mammals
         }
 
         public static IEnumerable<object[]> DataFriendlyWith =>
-        new List<object[]>
-        {
-           new [] { new Bison(2) },
-           new [] { new Elephant(2) }
-        };
+            new List<object[]>
+            {
+                new object[] {new Bison(2)},
+                new object[] {new Elephant(2)}
+            };
 
         [Theory]
         [MemberData(nameof(DataFriendlyWith))]
@@ -54,14 +52,14 @@ namespace ZooCorp.Tests.Animals.Mammals
         }
 
         public static IEnumerable<object[]> DataNotFriendlyWith =>
-        new List<object[]>
-        {
-           new [] { new Penguin(2) },
-           new [] { new Snake(2) },
-           new [] { new Lion(2) },
-           new [] { new Turtle(2) },
-           new [] { new Parrot(2) }
-        };
+            new List<object[]>
+            {
+                new object[] {new Penguin(2)},
+                new object[] {new Snake(2)},
+                new object[] {new Lion(2)},
+                new object[] {new Turtle(2)},
+                new object[] {new Parrot(2)}
+            };
 
         [Theory]
         [MemberData(nameof(DataNotFriendlyWith))]
@@ -74,21 +72,25 @@ namespace ZooCorp.Tests.Animals.Mammals
         [Fact]
         public void ShouldTrackFeeding()
         {
-            Bison bison = new Bison(1);
+            ZooConsole console = new ZooConsole();
+            Bison bison = new Bison(1, null, console);
             var zooKeeper = new ZooKeeper("Bob", "Smith");
             bison.Feed(new Grass(), zooKeeper);
 
             Assert.Single(bison.FeedTimes);
             Assert.Equal(zooKeeper, bison.FeedTimes[0].FeedByZooKeeper);
+            Assert.Equal("Bison: Bison ID 1 was fed by Bob Smith.", console.Messages[0]);
         }
 
         [Fact]
         public void ShouldThrowExceptionIfFoodIsNotFavorite()
         {
-            Bison bison = new Bison(1);
+            ZooConsole console = new ZooConsole();
+            Bison bison = new Bison(1, null, console);
             var zooKeeper = new ZooKeeper("Bob", "Smith");
 
             Assert.Throws<NotFavoriteFoodException>(() => bison.Feed(new Meat(), zooKeeper));
+            Assert.Equal("Bison: Trying to feed Bison ID 1 with not its favorite food.", console.Messages[0]);
         }
 
         [Fact]
